@@ -47,14 +47,14 @@ def insertValue(dbTable,dbCol,value):
     '''
     assert conn != None, "No database connection"
 
-	query = f"INSERT INTO {dbTable} ({dbCol}) VALUES (?)"
+    query = f"INSERT INTO {dbTable} ({dbCol}) VALUES (?)"
 
-	val = (value,)
+    val = (value,)
 
-	cur.execute(query,val)
+    cur.execute(query,val)
 
-	
-	conn.commit()
+    
+    conn.commit()
 
 def open_file():
     global FILE_PATH
