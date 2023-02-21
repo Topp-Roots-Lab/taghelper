@@ -11,13 +11,13 @@ import os
 
 
 try:
-	conn = mariadb.connect(
-		user="topplab",
-		password=getpass.getpass(prompt='Database user password: '),
-		host="10.16.0.101",
-		port=3306,
-		database="tag_server"
-	)
+    conn = mariadb.connect(
+        user="topplab",
+        password=getpass.getpass(prompt='Database user password: '),
+        host="10.16.0.101",
+        port=3306,
+        database="tag_server"
+    )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
@@ -58,25 +58,25 @@ def insertAllCellsInCol(path, colNum):
     ws = wb.active
 
 
-	confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
-	if confirm != "YES":
-		print("Exiting...")
-		sys.exit(1)
+    confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
+    if confirm != "YES":
+        print("Exiting...")
+        sys.exit(1)
 
-	for i in range(2, row + 1):
-		cell = ws.cell(row = i, column = colNum)
-		insertValue("tags","UUid",cell.value)
+    for i in range(2, row + 1):
+        cell = ws.cell(row = i, column = colNum)
+        insertValue("tags","UUid",cell.value)
 
-	lastId = cur.lastrowid
-	firstNewId = lastId - row + 2
+    lastId = cur.lastrowid
+    firstNewId = lastId - row + 2
 
-	print(lastId)
-	print(firstNewId)
+    print(lastId)
+    print(firstNewId)
 
 
-	# wb.save(path)
+    # wb.save(path)
 
-	conn.commit()
+    conn.commit()
 
 
 
