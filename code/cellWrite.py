@@ -59,9 +59,9 @@ def write_wb(path, row_n, col_n, data):
     
    
     ws = wb.active
-
-    cell = ws.cell(row = row_n, column = row_n)
-    cell.value = str(data)
+    for i in range(1, row_n):
+        cell = ws.cell(row = i, column = col_n)
+        cell.value = str(data)
 
     wb.save(path)
     print("write successful")
