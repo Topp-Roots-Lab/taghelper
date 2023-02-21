@@ -83,6 +83,9 @@ def insertAllCellsInCol(path, colNum):
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb.active
 
+    row = sheet.max_row #rows in sheet
+    column = sheet.max_column #cols in sheet
+
 
     confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
     if confirm != "YES":
@@ -144,7 +147,7 @@ file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pac
 
 ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 
-colnum_label = Label(win, text="Enter the col number", font=('Georgia 13')).pack(pady=10)
+colnum_label = Label(win, text="Enter the col number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
 
 col_num_E = Entry(win,font=('Georgia 13'),width=40)
 col_num_E.pack(pady=20)
