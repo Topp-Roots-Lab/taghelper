@@ -32,6 +32,30 @@ win = Tk()
 # Set the geometry of tkinter frame
 win.geometry("700x350")
 
+def insertValue(dbTable,dbCol,value):
+    '''
+    Inserts a single value to the connected database
+
+    Parameters:
+        str dbTable (name of table in connected database)
+        str dbCol (name of col in connected database)
+        str value (what is to be inserted)
+
+    Return:
+        void
+
+    '''
+    assert conn != None, "No database connection"
+
+	query = f"INSERT INTO {dbTable} ({dbCol}) VALUES (?)"
+
+	val = (value,)
+
+	cur.execute(query,val)
+
+	
+	conn.commit()
+
 def open_file():
     global FILE_PATH
     file = filedialog.askopenfile(mode='r', filetypes=[('Excel', '*.xlsx')])
@@ -55,7 +79,7 @@ def insertAllCellsInCol(path, colNum):
     Return:
         void
     '''
-    global FILE_PATH
+    
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb.active
 
@@ -66,6 +90,7 @@ def insertAllCellsInCol(path, colNum):
         sys.exit(1)
 
     for i in range(2, row + 1):
+        
         cell = ws.cell(row = i, column = colNum)
         insertValue("tags","UUid",cell.value)
 
@@ -96,16 +121,16 @@ def write_wb(path, row_n, col_n, data):
     print("write successful")
 
 
-# Add a Label widget
+
 file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pack(pady=10)
 
 
 
-# Create a Button
 ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 
 colnum_label = Label(win, text="Enter the col number", font=('Georgia 13')).pack(pady=10)
 
+ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E)) ).pack(pady=20)
 
 col_num_E = Entry(win,font=('Georgia 13'),width=40)
 col_num_E.pack(pady=20)
@@ -124,7 +149,7 @@ val_E.pack(pady=20)
 # def wrapper():
 #     write_wb(FILE_PATH, 1, 1, "1")
 
-ttk.Button(win, text="upload", command=lambda: write_wb(FILE_PATH, int(row_num_E.get()), int(col_num_E.get()), str(val_E.get())) ).pack(pady=20)
+
     
 
 ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, int(row_num_E.get()), int(col_num_E.get()), str(val_E.get())) ).pack(pady=20)
