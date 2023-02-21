@@ -108,20 +108,36 @@ def insertAllCellsInCol(path, colNum):
 
 
 
-def write_wb(path, row_n, col_n, data):
+def write_wb(path, firstid, lastid, col_n, startrow=1):
+    '''
+    Writes to a column (col_n) of (path).xlsx the values from (firstid) to (lastid) starting on row (startrow) and incrementing down the column.
+
+    Parameters:
+        str path (The path to the .xlsx file to write to. Must end in .xlsx.)
+        int firstid (The first uid assigned to the first row to be written to.)
+        int lastid (The last id belonging to the last row in this sheet.)
+        int col_n (The column to write id values to. Sheet columns are idexed from left to right starting at 1. (A is 1, B is 2, etc.))
+        int startrow [optional] (The first row that contains data needing an id value (not col headers etc.). Default value 1 (row 1).)
+
+    Return:
+        void
+
+    '''
     wb = openpyxl.load_workbook(path, data_only=True)
     
    
     ws = wb.active
-    for i in range(1, row_n):
-        cell = ws.cell(row = i, column = col_n)
-        cell.value = str(data)
+    rowi = startrow
+    for i in range(firstid, lastid):
+        cell = ws.cell(row = rowi, column = col_n)
+        cell.value = str(i)
+        rowi+=1
 
     wb.save(path)
     print("write successful")
 
 
-
+#tkinter window stuff
 file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pack(pady=10)
 
 
@@ -144,10 +160,6 @@ val_label = Label(win, text="Enter the value to write", font=('Georgia 13')).pac
 
 val_E = Entry(win,font=('Georgia 13'),width=40)
 val_E.pack(pady=20)
-
-
-# def wrapper():
-#     write_wb(FILE_PATH, 1, 1, "1")
 
 
     
