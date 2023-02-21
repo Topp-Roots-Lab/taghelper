@@ -146,10 +146,12 @@ ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 
 colnum_label = Label(win, text="Enter the col number", font=('Georgia 13')).pack(pady=10)
 
-ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E)) ).pack(pady=20)
-
 col_num_E = Entry(win,font=('Georgia 13'),width=40)
 col_num_E.pack(pady=20)
+
+ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E)) ).pack(pady=20)
+
+
 
 rownum_label = Label(win, text="Enter the row number", font=('Georgia 13')).pack(pady=10)
 
