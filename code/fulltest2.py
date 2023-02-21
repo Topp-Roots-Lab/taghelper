@@ -8,6 +8,8 @@ from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 import os
 
+import getpass
+
 
 
 try:
