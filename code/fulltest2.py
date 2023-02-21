@@ -43,6 +43,57 @@ def open_file():
       
       Label(win, text=str(filepath), font=('Aerial 11')).pack()
 
+def insertAllCellsInCol(path, colNum):
+    '''
+    Reads an entire column from open xlsx sheet and inserts all values in sequential order to connected database.
+
+    Parameters:
+        int colNum (The column of the database intended to be uploaded. Column numbers increment from 1 starting on left of xlsx document. (A is 1, B is 2, etc.))
+
+    Return:
+        void
+    '''
+    global FILE_PATH
+    wb = openpyxl.load_workbook(path, data_only=True)
+    ws = wb.active
+
+
+	confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
+	if confirm != "YES":
+		print("Exiting...")
+		sys.exit(1)
+
+	for i in range(2, row + 1):
+		cell = ws.cell(row = i, column = colNum)
+		insertValue("tags","UUid",cell.value)
+
+	lastId = cur.lastrowid
+	firstNewId = lastId - row + 2
+
+	print(lastId)
+	print(firstNewId)
+
+
+	# wb.save(path)
+
+	conn.commit()
+
+
+
+
+def write_wb(path, row_n, col_n, data):
+    wb = openpyxl.load_workbook(path, data_only=True)
+    
+   
+    ws = wb.active
+    for i in range(1, row_n):
+        cell = ws.cell(row = i, column = col_n)
+        cell.value = str(data)
+
+    wb.save(path)
+    print("write successful")
+
+
 # Add a Label widget
 file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pack(pady=10)
 
@@ -67,22 +118,11 @@ val_label = Label(win, text="Enter the value to write", font=('Georgia 13')).pac
 val_E = Entry(win,font=('Georgia 13'),width=40)
 val_E.pack(pady=20)
 
-def write_wb(path, row_n, col_n, data):
-    wb = openpyxl.load_workbook(path, data_only=True)
-    
-   
-    ws = wb.active
-    for i in range(1, row_n):
-        cell = ws.cell(row = i, column = col_n)
-        cell.value = str(data)
-
-    wb.save(path)
-    print("write successful")
 
 # def wrapper():
 #     write_wb(FILE_PATH, 1, 1, "1")
 
-
+ttk.Button(win, text="upload", command=lambda: write_wb(FILE_PATH, int(row_num_E.get()), int(col_num_E.get()), str(val_E.get())) ).pack(pady=20)
     
 
 ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, int(row_num_E.get()), int(col_num_E.get()), str(val_E.get())) ).pack(pady=20)
