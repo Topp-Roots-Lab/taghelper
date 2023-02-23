@@ -156,12 +156,12 @@ ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, in
 
 
 
-rownum_label = Label(win, text="Enter the row number", font=('Georgia 13')).pack(pady=10)
+rownum_label = Label(win, text="Enter the first row number requiring a Uid", font=('Georgia 13')).pack(pady=10)
 
 row_num_E = Entry(win,font=('Georgia 13'),width=40)
 row_num_E.pack(pady=20)
 
-val_label = Label(win, text="Enter the value to write", font=('Georgia 13')).pack(pady=10)
+val_label = Label(win, text="Enter the col number that will contain Uids.", font=('Georgia 13')).pack(pady=10)
 
 val_E = Entry(win,font=('Georgia 13'),width=40)
 val_E.pack(pady=20)
