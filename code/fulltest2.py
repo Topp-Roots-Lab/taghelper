@@ -73,7 +73,7 @@ def open_file():
       
       Label(win, text=str(filepath), font=('Aerial 11')).pack()
 
-def insertAllCellsInCol(path, colNum):
+def insertAllCellsInCol(path, colNum, firstDataRow=1):
     '''
     Reads an entire column from open xlsx sheet and inserts all values in sequential order to connected database.
 
@@ -96,13 +96,13 @@ def insertAllCellsInCol(path, colNum):
         print("Exiting...")
         sys.exit(1)
 
-    for i in range(2, row + 1):
+    for i in range(firstDataRow, row + 1):
         
         cell = ws.cell(row = i, column = colNum)
         insertValue("tags","UUid",cell.value)
 
     lastId = cur.lastrowid
-    firstNewId = lastId - row + 2
+    firstNewId = lastId - row + firstDataRow
 
     print(lastId)
     print(firstNewId)
@@ -156,7 +156,12 @@ colnum_label = Label(win, text="Enter the col number containing barcode strings:
 col_num_E = Entry(win,font=('Georgia 13'),width=40)
 col_num_E.pack(pady=20)
 
-ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get())) ).pack(pady=20)
+rownum_label_bc = Label(win, text="Enter the first row number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
+
+row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
+row_num_E_bc.pack(pady=20)
+
+ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), firstDataRow=int(row_num_E_bc.get())) ).pack(pady=20)
 
 
 
