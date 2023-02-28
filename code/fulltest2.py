@@ -31,6 +31,7 @@ win = Tk()
 
 # Set the geometry of tkinter frame
 win.geometry("700x350")
+win.title("TagHelper")
 
 def insertValue(dbTable,dbCol,value):
     '''
