@@ -32,6 +32,7 @@ win = Tk()
 # Set the geometry of tkinter frame
 win.geometry("700x350")
 win.title("TagHelper")
+win.configure(bg='#b3d98d')
 
 def insertValue(dbTable,dbCol,value):
     '''
