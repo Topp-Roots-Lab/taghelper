@@ -10,7 +10,8 @@ import os
 
 import getpass
 
-
+LASTID = None
+FIRSTNEWID = None
 
 try:
     conn = mariadb.connect(
@@ -74,6 +75,8 @@ def open_file():
       Label(win, text=str(filepath), font=('Aerial 11')).pack()
 
 def insertAllCellsInCol(path, colNum, firstDataRow=1):
+    global FIRSTNEWID
+    global LASTID
     '''
     Reads an entire column from open xlsx sheet and inserts all values in sequential order to connected database.
 
@@ -107,6 +110,9 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     print(lastId)
     print(firstNewId)
 
+    FIRSTNEWID =firstNewId
+    LASTID = lastId
+
 
     # wb.save(path)
 
@@ -135,6 +141,10 @@ def write_wb(path, firstid, lastid, col_n, startrow=1):
    
     ws = wb.active
     rowi = startrow
+
+    assert firstid != None, "Must insert values to generate ids"
+    assert lastid != None, "Must insert values to generate ids"
+
     for i in range(firstid, lastid):
         cell = ws.cell(row = rowi, column = col_n)
         cell.value = str(i)
@@ -178,7 +188,7 @@ val_E.pack(pady=20)
 
     
 
-ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, int(row_num_E.get()), int(col_num_E.get()), str(val_E.get())) ).pack(pady=20)
+ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), startrow=int(row_num_E.get()))).pack(pady=20)
 
 win.mainloop()
 
