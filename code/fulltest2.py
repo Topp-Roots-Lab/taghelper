@@ -12,6 +12,7 @@ import getpass
 
 LASTID = None
 FIRSTNEWID = None
+FILE_PATH = None
 
 try:
     conn = mariadb.connect(
@@ -27,7 +28,7 @@ except mariadb.Error as e:
 
 cur = conn.cursor()
 
-FILE_PATH = None
+
 
 # Create an instance of tkinter frame
 win = Tk()
@@ -62,6 +63,9 @@ def insertValue(dbTable,dbCol,value):
     conn.commit()
 
 def open_file():
+    '''
+    Opens a choose file widget
+    '''
     global FILE_PATH
     file = filedialog.askopenfile(mode='r', filetypes=[('Excel', '*.xlsx')])
     if file:
@@ -81,7 +85,10 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     Reads an entire column from open xlsx sheet and inserts all values in sequential order to connected database.
 
     Parameters:
+        str path (The path to the .xlsx finle to upload)
         int colNum (The column of the database intended to be uploaded. Column numbers increment from 1 starting on left of xlsx document. (A is 1, B is 2, etc.))
+        int firstDataRow (The first row in the spreadsheet containing data needing to be pulled. Default value 1. Overridden in examples where a spreadsheet contains headings on the first few rows etc.)
+
 
     Return:
         void
@@ -97,7 +104,7 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
     if confirm != "YES":
         print("Exiting...")
-        sys.exit(1)
+
 
     for i in range(firstDataRow, row + 1):
         
@@ -107,8 +114,8 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     lastId = cur.lastrowid
     firstNewId = lastId - row + firstDataRow
 
-    print(lastId)
-    print(firstNewId)
+    # print(lastId)
+    # print(firstNewId)
 
     FIRSTNEWID =firstNewId
     LASTID = lastId
