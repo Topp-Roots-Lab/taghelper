@@ -152,7 +152,7 @@ def write_wb(path, firstid, lastid, col_n, startrow=1):
     assert firstid != None, "Must insert values to generate ids"
     assert lastid != None, "Must insert values to generate ids"
 
-    for i in range(firstid, lastid):
+    for i in range(firstid, lastid+1):
         cell = ws.cell(row = rowi, column = col_n)
         cell.value = str(i)
         rowi+=1
