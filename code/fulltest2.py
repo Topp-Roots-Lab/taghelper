@@ -124,6 +124,7 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     # wb.save(path)
 
     conn.commit()
+    wb.close()
 
 
 
@@ -158,6 +159,7 @@ def write_wb(path, firstid, lastid, col_n, startrow=1):
         rowi+=1
 
     wb.save(path)
+    wb.close()
     print("write successful")
 
 
@@ -203,5 +205,7 @@ row_num_E.pack(pady=20)
 ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), startrow=int(row_num_E.get()))).pack(pady=20)
 
 win.mainloop()
+
+
 
 
