@@ -14,3 +14,6 @@ pip install -r requirements.txt
 ```
 
 ## Configuration
+### Adding new computers to mariadb
+Any computer that will run these scripts needs to be recognized by the db. You must create a database user for each computer before attempting to run the scripts.
+
