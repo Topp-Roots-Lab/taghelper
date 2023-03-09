@@ -1,3 +1,4 @@
+#-Dylan Fritz <dfritz1211@gmail.com>
 import mariadb
 import sys
 import openpyxl
