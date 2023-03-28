@@ -19,7 +19,7 @@ try:
     conn = mariadb.connect(
         user="topplab",
         password=getpass.getpass(prompt='Database user password: '),
-        host="10.16.0.101",
+        host="10.16.0.101", #Nebula's relational ip!
         port=3306,
         database="tag_server"
     )
