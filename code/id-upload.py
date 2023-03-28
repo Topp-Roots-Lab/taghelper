@@ -79,7 +79,7 @@ def open_file():
       
       Label(win, text=str(filepath), font=('Aerial 11')).pack()
 
-def insertAllCellsInCol(path, colNum, firstDataRow=1):
+def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     global FIRSTNEWID
     global LASTID
     '''
@@ -96,7 +96,7 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
     '''
     
     wb = openpyxl.load_workbook(path, data_only=True)
-    ws = wb.active
+    ws = wb[sheetName]
 
     row = ws.max_row #rows in sheet
     column = ws.max_column #cols in sheet
@@ -107,7 +107,9 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
         print("Exiting...")
 
 
-    for i in range(firstDataRow, row + 1):
+    for i in range(firstDataRow, row):
+
+        print("READING ROW: " + str(i))
         
         cell = ws.cell(row = i, column = colNum)
         insertValue("tags","UUid",cell.value)
@@ -130,7 +132,7 @@ def insertAllCellsInCol(path, colNum, firstDataRow=1):
 
 
 
-def write_wb(path, firstid, lastid, col_n, startrow=1):
+def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
     '''
     Writes to a column (col_n) of (path).xlsx the values from (firstid) to (lastid) starting on row (startrow) and incrementing down the column.
 
@@ -148,13 +150,13 @@ def write_wb(path, firstid, lastid, col_n, startrow=1):
     wb = openpyxl.load_workbook(path, data_only=True)
     
    
-    ws = wb.active
+    ws = wb[sheetName]
     rowi = startrow
 
     assert firstid != None, "Must insert values to generate ids"
     assert lastid != None, "Must insert values to generate ids"
 
-    for i in range(firstid, lastid+1):
+    for i in range(firstid, lastid):
         cell = ws.cell(row = rowi, column = col_n)
         cell.value = str(i)
         rowi+=1
@@ -171,6 +173,11 @@ file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pac
 
 ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 
+sheetname_label = Label(win, text="Enter the sheet name containing barcode strings EXACTLY AS IT IS IN EXCEL:", font=('Georgia 13')).pack(pady=10)
+
+sheet_name_E = Entry(win,font=('Georgia 13'),width=40)
+sheet_name_E.pack(pady=20)
+
 colnum_label = Label(win, text="Enter the col number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
 
 col_num_E = Entry(win,font=('Georgia 13'),width=40)
@@ -181,7 +188,7 @@ rownum_label_bc = Label(win, text="Enter the first row number containing barcode
 row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
 row_num_E_bc.pack(pady=20)
 
-ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), firstDataRow=int(row_num_E_bc.get())) ).pack(pady=20)
+ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), str(sheet_name_E.get()), firstDataRow=int(row_num_E_bc.get())) ).pack(pady=20)
 
 
 
@@ -203,7 +210,7 @@ row_num_E.pack(pady=20)
 
     
 
-ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), startrow=int(row_num_E.get()))).pack(pady=20)
+ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), str(sheet_name_E.get()), startrow=int(row_num_E.get()))).pack(pady=20)
 
 win.mainloop()
 
