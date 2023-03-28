@@ -103,9 +103,9 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     column = ws.max_column #cols in sheet
 
 
-    confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
-    if confirm != "YES":
-        print("Exiting...")
+    # confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
+    # if confirm != "YES":
+    #     print("Exiting...")
 
 
     for i in range(firstDataRow, row):
