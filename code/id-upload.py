@@ -88,6 +88,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     Parameters:
         str path (The path to the .xlsx finle to upload)
         int colNum (The column of the database intended to be uploaded. Column numbers increment from 1 starting on left of xlsx document. (A is 1, B is 2, etc.))
+        str sheetName (The name of the excel sheet to be witten to.)
         int firstDataRow (The first row in the spreadsheet containing data needing to be pulled. Default value 1. Overridden in examples where a spreadsheet contains headings on the first few rows etc.)
 
 
@@ -141,6 +142,7 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
         int firstid (The first uid assigned to the first row to be written to.)
         int lastid (The last id belonging to the last row in this sheet.)
         int col_n (The column to write id values to. Sheet columns are idexed from left to right starting at 1. (A is 1, B is 2, etc.))
+        str sheetName (The name of the excel sheet to be witten to.)
         int startrow [optional] (The first row that contains data needing an id value (not col headers etc.). Default value 1 (row 1).)
 
     Return:
