@@ -41,8 +41,11 @@ sudo mariadb
 Run the following SQL queries to add a new user.
 
 ```sql
-CREATE USER '[the computer being added's username]@[the computer being added's ip]' IDENTIFIED BY '[password]';
+CREATE USER '[the computer being added's username]'@'[the computer being added's ip]' IDENTIFIED BY '[password]';
 GRANT ALL PRIVILEGES ON [database_name].* TO '[the computer being added's username]'@'[the computer being added's ip]';
 FLUSH PRIVILEGES;
 ```
-
+You can verify the new user's existance with:
+```sql
+SELECT User, Host FROM mysql.user;
+```
