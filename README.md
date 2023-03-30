@@ -57,3 +57,8 @@ followed by:
 ```bash
 exit
 ```
+
+Verify that the scripts are now functional on this computer by running the query-db.py script.
+```bash
+python query-db.py
+```
