@@ -17,6 +17,17 @@ pip install -r requirements.txt
 ### Adding new computers to mariadb
 Any computer that will run these scripts needs to be recognized by the db. You must create a database user for each computer before attempting to run the scripts.
 
+Check your computer's current ip address. You can do this by running 
+
+```bash
+ipconfig
+```
+on windows or
+```bash
+ifconfig
+```
+on linux.
+
 Use ssh to connect to the computer or server hosting the database.
 
 ```bash
@@ -28,3 +39,5 @@ Open the mariadb configuration console.
 ```bash
 sudo mariadb
 ```
+
+Run the following SQL queries to add a new user.
