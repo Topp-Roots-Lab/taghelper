@@ -83,5 +83,6 @@ except mariadb.Error as e:
 ```
 This part is fairly self-explanatory. Update the username field to the new host's username, the host field to the new host's ip address, and the database field to the new host's database for tags (if changed).
 
-## Using id-upload.py
+## How do I use ___.py?
+### Using id-upload.py
 id-upload.py is the main script used to upload tags and generate ids. Here's how to use it :)
