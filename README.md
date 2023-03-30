@@ -22,3 +22,9 @@ Use ssh to connect to the computer or server hosting the database.
 ```bash
 ssh [hostname]@[hostip]
 ```
+
+Open the mariadb configuration console.
+
+```bash
+sudo mariadb
+```
