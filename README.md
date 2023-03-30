@@ -26,9 +26,7 @@ on windows or
 ```bash
 ifconfig
 ```
-on linux.
-
-Use ssh to connect to the computer or server hosting the database.
+on linux. Use ssh to connect to the computer or server hosting the database.
 
 ```bash
 ssh [hostname]@[hostip]
@@ -41,3 +39,9 @@ sudo mariadb
 ```
 
 Run the following SQL queries to add a new user.
+
+```sql
+CREATE USER '[the computer being added's username]@[the computer being added's ip]' IDENTIFIED BY '[password]';
+
+```
+
