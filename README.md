@@ -17,3 +17,8 @@ pip install -r requirements.txt
 ### Adding new computers to mariadb
 Any computer that will run these scripts needs to be recognized by the db. You must create a database user for each computer before attempting to run the scripts.
 
+Use ssh to connect to the computer or server hosting the database.
+
+```bash
+ssh [hostname]@[hostip]
+```
