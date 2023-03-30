@@ -51,7 +51,7 @@ SELECT User, Host FROM mysql.user;
 ```
 Exit the database by typing:
 ```sql
-EXIT
+EXIT;
 ```
 followed by:
 ```bash
@@ -62,3 +62,6 @@ Verify that the scripts are now functional on this computer by running the query
 ```bash
 python query-db.py
 ```
+### Accessing a database on a different server than default (Nebula).
+The tagserver is currently hosted on Nebula. If you have moved the database to another host and want to change the scripts to access this host instead you need to update the ip and hostname in the config.
+
