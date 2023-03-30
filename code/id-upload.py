@@ -99,8 +99,10 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb[sheetName]
 
-    row = ws.max_row #rows in sheet
+    row = int(last_row_num_E_bc.get()) #rows in sheet
     column = ws.max_column #cols in sheet
+
+    print("MAX ROWS: "+str(row))
 
 
     # confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
@@ -108,7 +110,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     #     print("Exiting...")
 
 
-    for i in range(firstDataRow, row):
+    for i in range(firstDataRow, row+1):
 
         print("READING ROW: " + str(i))
         
@@ -158,7 +160,7 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
     assert firstid != None, "Must insert values to generate ids"
     assert lastid != None, "Must insert values to generate ids"
 
-    for i in range(firstid, lastid):
+    for i in range(firstid, lastid+1):
         cell = ws.cell(row = rowi, column = col_n)
         cell.value = str(i)
         rowi+=1
@@ -189,6 +191,14 @@ rownum_label_bc = Label(win, text="Enter the first row number containing barcode
 
 row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
 row_num_E_bc.pack(pady=20)
+
+
+
+last_rownum_label_bc = Label(win, text="Enter the last row number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
+
+last_row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
+last_row_num_E_bc.pack(pady=20)
+
 
 ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), str(sheet_name_E.get()), firstDataRow=int(row_num_E_bc.get())) ).pack(pady=20)
 
