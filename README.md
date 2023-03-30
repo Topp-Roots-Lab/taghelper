@@ -49,3 +49,11 @@ You can verify the new user's existance with:
 ```sql
 SELECT User, Host FROM mysql.user;
 ```
+Exit the database by typing:
+```sql
+EXIT
+```
+followed by:
+```bash
+exit
+```
