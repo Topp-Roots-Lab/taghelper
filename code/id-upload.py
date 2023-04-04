@@ -132,7 +132,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     #     print("Exiting...")
 
 
-    for i in range(firstDataRow, row+frame) : 
+    for i in range(firstDataRow, row+1) : 
 
         print("READING ROW: " + str(i))
         
