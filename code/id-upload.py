@@ -99,7 +99,7 @@ def open_file():
       assert FILE_PATH != None, "Should have a file path"
       assert os.path.isfile(FILE_PATH)
       
-      Label(frame, text=str(filepath), font=('Aerial 11')).pack()
+      Label(frame, text=str(filepath), font=('Aerial 11'))
 
 def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     global FIRSTNEWID
@@ -132,7 +132,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     #     print("Exiting...")
 
 
-    for i in range(firstDataRow, row+frame) : 
+    for i in range(firstDataRow, row+1) : 
 
         print("READING ROW: " + str(i))
         
@@ -193,35 +193,48 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
 
 
 #tkinter window stuff
-file_label = Label(frame, text="Select a file to upload", font=('Helvetica', fontsize)).grid(row=1, column=0)
+file_label = Label(frame, text="Select a file to upload", font=('Helvetica', fontsize))
+file_label.grid(row=1, column=0)
 
 ttk.Button(frame, text="Browse", style='TButton', command=open_file).grid(row=2, column=0)
 
-sheetname_label = Label(frame, text="Enter the sheet name containing barcode strings EXACTLY AS IT IS IN EXCEL:", font=('Helvetica', fontsize)).grid(row=3, column=0)
+sheetname_label = Label(frame, text="Enter the sheet name containing barcode strings EXACTLY AS IT IS IN EXCEL:", font=('Helvetica', fontsize))
+sheetname_label.grid(row=3, column=0)
 
-sheet_name_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=4, column=0)
+sheet_name_E = Entry(frame,font=('Helvetica', fontsize))
+sheet_name_E.grid(row=4, column=0)
 
-colnum_label = Label(frame, text="Enter the col number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=5, column=0)
+colnum_label = Label(frame, text="Enter the col number containing barcode strings:", font=('Helvetica', fontsize))
+colnum_label.grid(row=5, column=0)
 
-col_num_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=6, column=0)
+col_num_E = Entry(frame,font=('Helvetica', fontsize))
+col_num_E.grid(row=6, column=0)
 
-rownum_label_bc = Label(frame, text="Enter the first row number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=7, column=0)
+rownum_label_bc = Label(frame, text="Enter the first row number containing barcode strings:", font=('Helvetica', fontsize))
+rownum_label_bc.grid(row=7, column=0)
 
-row_num_E_bc = Entry(frame, font=('Helvetica', fontsize)).grid(row=8, column=0)
+row_num_E_bc = Entry(frame, font=('Helvetica', fontsize))
+row_num_E_bc.grid(row=8, column=0)
 
-last_rownum_label_bc = Label(frame, text="Enter the last row number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=9, column=0)
+last_rownum_label_bc = Label(frame, text="Enter the last row number containing barcode strings:", font=('Helvetica', fontsize))
+last_rownum_label_bc.grid(row=9, column=0)
 
-last_row_num_E_bc = Entry(frame,font=('Helvetica', fontsize)).grid(row=10, column=0)
+last_row_num_E_bc = Entry(frame,font=('Helvetica', fontsize))
+last_row_num_E_bc.grid(row=10, column=0)
 
 ttk.Button(frame, text="Upload", style='TButton', command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), str(sheet_name_E.get()), firstDataRow=int(row_num_E_bc.get()))).grid(row=11, column=0)
 
-val_label = Label(frame, text="Enter the col number that will contain Uids.", font=('Helvetica', fontsize)).grid(row=12, column=0)
+val_label = Label(frame, text="Enter the col number that will contain Uids.", font=('Helvetica', fontsize))
+val_label.grid(row=12, column=0)
 
-val_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=13, column=0)
+val_E = Entry(frame,font=('Helvetica', fontsize))
+val_E.grid(row=13, column=0)
 
-rownum_label = Label(frame, text="Enter the first row number requiring a Uid", font=('Helvetica', fontsize)).grid(row=14, column=0)
+rownum_label = Label(frame, text="Enter the first row number requiring a Uid", font=('Helvetica', fontsize))
+rownum_label.grid(row=14, column=0)
 
-row_num_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=15, column=0)
+row_num_E = Entry(frame,font=('Helvetica', fontsize))
+row_num_E.grid(row=15, column=0)
 
 ttk.Button(frame, text="Write", style='TButton', command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), str(sheet_name_E.get()), startrow=int(row_num_E.get()))).grid(row=16, column=0)
 
