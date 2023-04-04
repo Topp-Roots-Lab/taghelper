@@ -17,7 +17,7 @@ FILE_PATH = None
 
 try:
     conn = mariadb.connect(
-        user="W11-TOPPLAB23",
+        user=os.getlogin(),
         password=getpass.getpass(prompt='Database user password: '),
         host="10.16.0.101", #Nebula's relational ip!
         port=3306,
