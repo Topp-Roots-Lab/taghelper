@@ -5,7 +5,7 @@ import getpass
 
 try:
 	conn = mariadb.connect(
-		user="topplab",
+		user="W11-TOPPLAB23",
 		password=getpass.getpass(prompt='Database user password: '),
 		host="10.16.0.101", #Nebula's relational ip!
 		port=3306,

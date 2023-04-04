@@ -17,7 +17,7 @@ FILE_PATH = None
 
 try:
     conn = mariadb.connect(
-        user="topplab",
+        user="W11-TOPPLAB23",
         password=getpass.getpass(prompt='Database user password: '),
         host="10.16.0.101", #Nebula's relational ip!
         port=3306,
@@ -34,10 +34,32 @@ cur = conn.cursor()
 # Create an instance of tkinter frame
 win = Tk()
 
-# Set the geometry of tkinter frame
-win.geometry("700x350")
+# Set the geometry of tkinter frame based on screen size
 win.title("TagHelper")
 win.configure(bg='#b3d98d')
+
+normal_width = 1920 
+normal_height = 1080
+screen_width = win.winfo_screenwidth()
+screen_height = win.winfo_screenheight()
+percent_width = screen_width / (normal_width / 100)
+percent_height = screen_height / (normal_height / 100)
+
+scale_factor = ((percent_width + percent_height) / 2) / 100
+fontsize = int(14*scale_factor)
+minimum_size = 8
+if fontsize < minimum_size:
+    fontsize = minimum_size
+
+buttonStyle = ttk.Style()
+buttonStyle.configure('TButton', font=("Helvetica", fontsize, ))
+
+frameStyle = ttk.Style()
+frameStyle.configure('TFrame', background="Teal")
+
+frame = ttk.Frame(win, padding=int(10*scale_factor), style='TFrame')
+
+frame.grid(row=0, column=0, sticky="")
 
 def insertValue(dbTable,dbCol,value):
     '''
@@ -77,7 +99,7 @@ def open_file():
       assert FILE_PATH != None, "Should have a file path"
       assert os.path.isfile(FILE_PATH)
       
-      Label(win, text=str(filepath), font=('Aerial 11')).pack()
+      Label(frame, text=str(filepath), font=('Aerial 11')).pack()
 
 def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     global FIRSTNEWID
@@ -110,7 +132,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     #     print("Exiting...")
 
 
-    for i in range(firstDataRow, row+1):
+    for i in range(firstDataRow, row+frame) : 
 
         print("READING ROW: " + str(i))
         
@@ -171,58 +193,40 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
 
 
 #tkinter window stuff
-file_label = Label(win, text="Select a file to upload", font=('Georgia 13')).pack(pady=10)
+file_label = Label(frame, text="Select a file to upload", font=('Helvetica', fontsize)).grid(row=1, column=0)
 
+ttk.Button(frame, text="Browse", style='TButton', command=open_file).grid(row=2, column=0)
 
+sheetname_label = Label(frame, text="Enter the sheet name containing barcode strings EXACTLY AS IT IS IN EXCEL:", font=('Helvetica', fontsize)).grid(row=3, column=0)
 
-ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
+sheet_name_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=4, column=0)
 
-sheetname_label = Label(win, text="Enter the sheet name containing barcode strings EXACTLY AS IT IS IN EXCEL:", font=('Georgia 13')).pack(pady=10)
+colnum_label = Label(frame, text="Enter the col number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=5, column=0)
 
-sheet_name_E = Entry(win,font=('Georgia 13'),width=40)
-sheet_name_E.pack(pady=20)
+col_num_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=6, column=0)
 
-colnum_label = Label(win, text="Enter the col number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
+rownum_label_bc = Label(frame, text="Enter the first row number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=7, column=0)
 
-col_num_E = Entry(win,font=('Georgia 13'),width=40)
-col_num_E.pack(pady=20)
+row_num_E_bc = Entry(frame, font=('Helvetica', fontsize)).grid(row=8, column=0)
 
-rownum_label_bc = Label(win, text="Enter the first row number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
+last_rownum_label_bc = Label(frame, text="Enter the last row number containing barcode strings:", font=('Helvetica', fontsize)).grid(row=9, column=0)
 
-row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
-row_num_E_bc.pack(pady=20)
+last_row_num_E_bc = Entry(frame,font=('Helvetica', fontsize)).grid(row=10, column=0)
 
+ttk.Button(frame, text="Upload", style='TButton', command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), str(sheet_name_E.get()), firstDataRow=int(row_num_E_bc.get()))).grid(row=11, column=0)
 
+val_label = Label(frame, text="Enter the col number that will contain Uids.", font=('Helvetica', fontsize)).grid(row=12, column=0)
 
-last_rownum_label_bc = Label(win, text="Enter the last row number containing barcode strings:", font=('Georgia 13')).pack(pady=10)
+val_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=13, column=0)
 
-last_row_num_E_bc = Entry(win,font=('Georgia 13'),width=40)
-last_row_num_E_bc.pack(pady=20)
+rownum_label = Label(frame, text="Enter the first row number requiring a Uid", font=('Helvetica', fontsize)).grid(row=14, column=0)
 
+row_num_E = Entry(frame,font=('Helvetica', fontsize)).grid(row=15, column=0)
 
-ttk.Button(win, text="upload", command=lambda: insertAllCellsInCol(FILE_PATH, int(col_num_E.get()), str(sheet_name_E.get()), firstDataRow=int(row_num_E_bc.get())) ).pack(pady=20)
+ttk.Button(frame, text="Write", style='TButton', command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), str(sheet_name_E.get()), startrow=int(row_num_E.get()))).grid(row=16, column=0)
 
-
-
-
-
-
-
-val_label = Label(win, text="Enter the col number that will contain Uids.", font=('Georgia 13')).pack(pady=10)
-
-val_E = Entry(win,font=('Georgia 13'),width=40)
-val_E.pack(pady=20)
-
-rownum_label = Label(win, text="Enter the first row number requiring a Uid", font=('Georgia 13')).pack(pady=10)
-
-row_num_E = Entry(win,font=('Georgia 13'),width=40)
-row_num_E.pack(pady=20)
-
-
-
-    
-
-ttk.Button(win, text="write", command=lambda: write_wb(FILE_PATH, FIRSTNEWID, LASTID, int(val_E.get()), str(sheet_name_E.get()), startrow=int(row_num_E.get()))).pack(pady=20)
+for child in frame.winfo_children():
+    child.grid_configure(padx=int(10*scale_factor), pady=int(10*scale_factor))
 
 win.mainloop()
 
