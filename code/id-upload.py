@@ -66,6 +66,13 @@ def insertValue(dbTable,dbCol,value):
     conn.commit()
 
 def hashstr(inp, fv=32):
+    '''
+    Takes a string as input and returns a base10 int hash.
+
+    Parameters:
+        str inp (Input string)
+        int fv (The value to feed to f [the ])
+    '''
     return Simhash(inp, f=fv).value
 
 def open_file():
