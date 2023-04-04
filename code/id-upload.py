@@ -63,6 +63,9 @@ def insertValue(dbTable,dbCol,value):
     
     conn.commit()
 
+def hashstr(inp, fv=32):
+    return Simhash(inp, f=fv).value
+
 def open_file():
     '''
     Opens a choose file widget
@@ -102,7 +105,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     row = int(last_row_num_E_bc.get()) #rows in sheet
     column = ws.max_column #cols in sheet
 
-    print("MAX ROWS: "+str(row))
+    print("MAX ROWS: " + str(row))
 
 
     # confirm = input("Are you sure you want to insert " + str(row) + " values to the database?\nType YES to continue.\n")
@@ -123,7 +126,7 @@ def insertAllCellsInCol(path, colNum, sheetName, firstDataRow=1):
     # print(lastId)
     # print(firstNewId)
 
-    FIRSTNEWID =firstNewId
+    FIRSTNEWID = firstNewId
     LASTID = lastId
 
 
