@@ -71,7 +71,10 @@ def hashstr(inp, fv=32):
 
     Parameters:
         str inp (Input string)
-        int fv (The value to feed to f [the ])
+        int fv (The value to feed to f [the length of the fingerprints]. Default 32 is 10 characters)
+    
+    Return
+        int
     '''
     return Simhash(inp, f=fv).value
 
