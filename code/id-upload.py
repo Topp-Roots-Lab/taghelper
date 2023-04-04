@@ -11,6 +11,8 @@ import os
 
 import getpass
 
+from simhash import Simhash
+
 LASTID = None
 FIRSTNEWID = None
 FILE_PATH = None
