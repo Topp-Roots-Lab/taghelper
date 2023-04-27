@@ -86,3 +86,5 @@ This part is fairly self-explanatory. Update the username field to the new host'
 ## How do I use ___.py?
 ### Using id-upload.py
 id-upload.py is the main script used to upload tags and generate ids. Here's how to use it :)
+
+1. Open the command line and navigate to the directory containing the script by using ```bash cd ```.
