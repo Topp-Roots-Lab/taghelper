@@ -101,6 +101,8 @@ python id-upload.py
 ![image](https://user-images.githubusercontent.com/100446167/234916209-52421645-a068-4000-9923-6d83a1e3fda1.png)
 5. Go into your workbook and double click on the sheet name in the tab at the bottom. Use Ctl+C to copy this text exactly.
 ![image](https://user-images.githubusercontent.com/100446167/234917856-f1927828-6e15-491c-98e5-c0593ba973f0.png)
-    Paste it into the area that says "Sheet name".
+
+    **Paste it into the area that says "Sheet name".**
+    
 ![image](https://user-images.githubusercontent.com/100446167/234918246-7078d5ec-330e-4f0c-8196-fea55e2cb70b.png)
 
