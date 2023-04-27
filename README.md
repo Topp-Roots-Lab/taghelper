@@ -103,18 +103,12 @@ python id-upload.py
 ![image](https://user-images.githubusercontent.com/100446167/234915732-d10afe90-064c-43df-9977-1aeaff7dbaa1.png)
 ![image](https://user-images.githubusercontent.com/100446167/234916209-52421645-a068-4000-9923-6d83a1e3fda1.png)
 
-6. Go into your workbook and double click on the sheet name in the tab at the bottom. Use Ctl+C to copy this text exactly.
+6. Go into your workbook and double click on the sheet name in the tab at the bottom. Use Ctl+C to copy this text exactly. Paste it into the area that says "Sheet name".
 ![image](https://user-images.githubusercontent.com/100446167/234917856-f1927828-6e15-491c-98e5-c0593ba973f0.png)
-
-    Paste it into the area that says "Sheet name".
-    
 ![image](https://user-images.githubusercontent.com/100446167/234918246-7078d5ec-330e-4f0c-8196-fea55e2cb70b.png)
 
-7. Find the col number containing your barcode strings by counting the columns, starting with 1 from the left.
+7. Find the col number containing your barcode strings by counting the columns, starting with 1 from the left. Type this number into the appropriate box.
 ![image](https://user-images.githubusercontent.com/100446167/234919748-55731665-defa-4564-9762-f29158bf81cb.png)
-
-    Type this number into the appropriate box.
-    
 ![image](https://user-images.githubusercontent.com/100446167/234920042-604aac91-435e-45f5-8ffa-3f6004c197f8.png)
 
 8. Find the first row number containing **ACTUAL DATA** and enter this into the next area.
@@ -125,8 +119,30 @@ python id-upload.py
 ![image](https://user-images.githubusercontent.com/100446167/234921512-36aba0b1-b5dc-4b44-95fc-df5631d8b45a.png)
 ![image](https://user-images.githubusercontent.com/100446167/234921600-9b5141d1-ac92-49e0-a3a0-3ee9d92fe955.png)
 
+10. **MAKE SURE YOU CLOSE THE EXCEL DOCUMENT BEFORE UPLOADING!!**
 
+11. Click "Upload". Monitor the console and be sure that the "Reading Row: x" counter goes until the last row number. 
+![image](https://user-images.githubusercontent.com/100446167/234922662-31f76b61-b427-48aa-a2ac-53aae645726d.png)
 
+12. Find the col number for UIDs in much the same way as finding the col number for the barcodes. Count columns starting from the left. Enter the value in the appropriate box. 
+![image](https://user-images.githubusercontent.com/100446167/234925215-813f460a-5d5f-489a-89b8-ae84cfdd20bf.png)
+![image](https://user-images.githubusercontent.com/100446167/234925371-c34b1e1e-3f15-409f-9bc1-ea99df91bd83.png)
+
+13. Find the first row number to save UIDs in. **THIS SHOULD BE THE SAME AS THE FIRST ROW OF BARCODE VALUES!** Enter it in the correct box.
+![image](https://user-images.githubusercontent.com/100446167/234926272-908e6869-1599-4df9-b938-8be34d23b06b.png)
+![image](https://user-images.githubusercontent.com/100446167/234926384-6d40bb61-3e76-4870-b26b-fee752bd22b6.png)
+
+14. **MAKE SURE YOU CLOSE THE EXCEL DOCUMENT BEFORE WRITING!!**
+
+15. Click "Write". Monitor the console and wait for the message "Write Successful" to be printed. 
+
+16. Open your document and make sure that the numbers seem to be consistent. You can use the script 
+```bash
+python query-db.py
+```
+to make sure that all values are the same in the database.
+
+17. You're done! I hope that was easy enough to understand and follow.
 
 
 
