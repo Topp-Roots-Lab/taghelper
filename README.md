@@ -91,18 +91,35 @@ id-upload.py is the main script used to upload tags and generate ids. Here's how
 ```bash
 cd [directory name]
 ```
+
 2. Run the script by typing
 ```bash
 python id-upload.py
 ```
+
 3. You will be prompted for the database password. Enter it in the command line and press enter.
-4. Click the big "browse" button at the top to open a file explorer in which you will locate and open the excel sheet you plan to use.
+
+5. Click the big "browse" button at the top to open a file explorer in which you will locate and open the excel sheet you plan to use.
 ![image](https://user-images.githubusercontent.com/100446167/234915732-d10afe90-064c-43df-9977-1aeaff7dbaa1.png)
 ![image](https://user-images.githubusercontent.com/100446167/234916209-52421645-a068-4000-9923-6d83a1e3fda1.png)
-5. Go into your workbook and double click on the sheet name in the tab at the bottom. Use Ctl+C to copy this text exactly.
+
+6. Go into your workbook and double click on the sheet name in the tab at the bottom. Use Ctl+C to copy this text exactly.
 ![image](https://user-images.githubusercontent.com/100446167/234917856-f1927828-6e15-491c-98e5-c0593ba973f0.png)
 
-    **Paste it into the area that says "Sheet name".**
+    Paste it into the area that says "Sheet name".
     
 ![image](https://user-images.githubusercontent.com/100446167/234918246-7078d5ec-330e-4f0c-8196-fea55e2cb70b.png)
+
+7. Find the col number containing your barcode strings by counting the columns, starting with 1 from the left.
+![image](https://user-images.githubusercontent.com/100446167/234919748-55731665-defa-4564-9762-f29158bf81cb.png)
+
+    Type this number into the appropriate box.
+    
+![image](https://user-images.githubusercontent.com/100446167/234920042-604aac91-435e-45f5-8ffa-3f6004c197f8.png)
+
+8. 
+
+
+
+
 
