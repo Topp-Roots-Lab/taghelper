@@ -117,7 +117,14 @@ python id-upload.py
     
 ![image](https://user-images.githubusercontent.com/100446167/234920042-604aac91-435e-45f5-8ffa-3f6004c197f8.png)
 
-8. 
+8. Find the first row number containing **ACTUAL DATA** and enter this into the next area.
+![image](https://user-images.githubusercontent.com/100446167/234920789-4bdbe593-b70d-4505-bb75-9e0a49c4ad01.png)
+![image](https://user-images.githubusercontent.com/100446167/234920886-9132547f-4c0b-4162-bdcb-3840e49e9ca0.png)
+
+9. Find the last row number containing data. **MAKE SURE THERE ARE NO EMPTY BOXES IN BETWEEN THE FIRST AND LAST ROW IN THE SELECTED COL.**
+![image](https://user-images.githubusercontent.com/100446167/234921512-36aba0b1-b5dc-4b44-95fc-df5631d8b45a.png)
+![image](https://user-images.githubusercontent.com/100446167/234921600-9b5141d1-ac92-49e0-a3a0-3ee9d92fe955.png)
+
 
 
 
