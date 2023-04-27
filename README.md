@@ -96,4 +96,6 @@ cd [directory name]
 python id-upload.py
 ```
 3. You will be prompted for the database password. Enter it in the command line and press enter.
-4. 
+4. Click the big "browse" button at the top to open a file explorer in which you will locate and open the excel sheet you plan to use.
+![image](https://user-images.githubusercontent.com/100446167/234915732-d10afe90-064c-43df-9977-1aeaff7dbaa1.png)
+
