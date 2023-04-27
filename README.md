@@ -91,3 +91,9 @@ id-upload.py is the main script used to upload tags and generate ids. Here's how
 ```bash
 cd [directory name]
 ```
+2. Run the script by typing
+```bash
+python id-upload.py
+```
+3. You will be prompted for the database password. Enter it in the command line and press enter.
+4. 
