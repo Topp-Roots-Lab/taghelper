@@ -1,3 +1,7 @@
+'''
+Inserts a single value from into a single table from command line arguments
+'''
+
 import mariadb
 import sys
 import getpass
