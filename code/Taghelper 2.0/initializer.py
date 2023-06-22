@@ -15,7 +15,9 @@ import getpass
 # # Set the geometry of tkinter frame
 # win.geometry("700x350")
 
-
+REQUIRED_COLS = {
+    "central": ["Location", "Date", "Project"]
+}
 
 file_path = None
 
