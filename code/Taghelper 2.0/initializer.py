@@ -10,6 +10,11 @@ import os
 
 import getpass
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+
 # # Create an instance of tkinter frame
 # win = Tk()
 # # Set the geometry of tkinter frame
@@ -64,9 +69,9 @@ def mapNeededCols(colKey, headers):
             failedList.append(key)
         
     if failed:
-        print("WARNING! MISSING FOLLOWING REQUIRED COLUMNS:")
+        logging.warning('MISSING FOLLOWING REQUIRED COLUMNS:')
         for col in failedList:
-            print(col)
+            logging.warning(col)
         return
 
     return colMap
@@ -81,7 +86,7 @@ test1 = ["key1", "key2", "key3"]
 test2 = ["key1", "random", "key3", "key"]
 
 
-print(mapNeededCols(test1, test2))
+logging.debug(mapNeededCols(test1, test2))
 # ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 # ttk.Button(win, text="test", command=printtest).pack(pady=20)
 
