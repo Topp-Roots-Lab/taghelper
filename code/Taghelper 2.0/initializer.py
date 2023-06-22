@@ -10,10 +10,10 @@ import os
 
 import getpass
 
-# Create an instance of tkinter frame
-win = Tk()
-# Set the geometry of tkinter frame
-win.geometry("700x350")
+# # Create an instance of tkinter frame
+# win = Tk()
+# # Set the geometry of tkinter frame
+# win.geometry("700x350")
 
 
 
@@ -49,10 +49,38 @@ def getColHeaders(path):
 
     return headers
 
+def mapNeededCols(colKey, headers):
+    colMap = {}
+    failed = False
+    failedList = []
+    for key in colKey:
+        try:
+            if headers.index(key) >= 0:
+                colMap[key] = headers.index(key)
+        except ValueError:
+            failed = True
+            failedList.append(key)
+        
+    if failed:
+        print("WARNING! MISSING FOLLOWING REQUIRED COLUMNS:")
+        for col in failedList:
+            print(col)
+        return
+
+    return colMap
+        
+
+
 def printtest():
     print(getColHeaders(file_path))
 
-ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
-ttk.Button(win, text="test", command=printtest).pack(pady=20)
 
-win.mainloop()
+test1 = ["key1", "key2", "key3"]
+test2 = ["key1", "random", "key3", "key"]
+
+
+print(mapNeededCols(test1, test2))
+# ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
+# ttk.Button(win, text="test", command=printtest).pack(pady=20)
+
+# win.mainloop()
