@@ -26,11 +26,12 @@ try:
         port=3306,
         database="testing"
     )
+    cur = conn.cursor()
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
 
-cur = conn.cursor()
+
 
 
 
@@ -49,15 +50,17 @@ def insertValue(dbTable,dbCol,value):
         void
 
     '''
+    global cur, conn
     assert conn != None, "No database connection"
 
-    query = f"INSERT INTO {dbTable} ({dbCol}) VALUES (?)"
+    query = f"INSERT INTO {dbTable} ({dbCol}) VALUES ('{value}')"
 
-    val = (value,)
+    # val = (value,)
 
     
 
-    cur.execute(query,val)
+    # cur.execute(query,val)
+    cur.execute(query)
 
     
     conn.commit()
@@ -200,13 +203,18 @@ def uploadData(data: dict):
 def printtest():
     print(getColHeaders(file_path))
 
-PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-ch = getColHeaders(PATH,"TestSheet1")
-cm = mapNeededCols(REQUIRED_COLS["central"],ch)
-d, _ = accumDataByUid(cm, 2, 44, PATH)
-print(d)
-# insertValue("test", "UUID", "IT WORKS")
+# PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
+# ch = getColHeaders(PATH,"TestSheet1")
+# cm = mapNeededCols(REQUIRED_COLS["central"],ch)
+# d, _ = accumDataByUid(cm, 2, 44, PATH)
+# print(d)
+
+insertValue("test", "uid", "IT WORKS")
+
 # ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 # ttk.Button(win, text="test", command=printtest).pack(pady=20)
 
 # win.mainloop()
+
+cur.close()
+conn.close()
