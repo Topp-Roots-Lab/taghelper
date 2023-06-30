@@ -66,13 +66,46 @@ def insertValue(dbTable,dbCol,value):
     conn.commit()
 
 
+def insertMultipleValues(table: str, cols: list, vals: list):
+    global cur, conn
+    assert conn != None, "No database connection"
+
+    query = f"INSERT INTO {table} ("
+    for i in range(0,len(cols)):
+        if i == len(cols)-1:
+            query += str(cols[i])
+        else:
+            query += f"{str(cols[i])},"
+    
+    query += ") VALUES ("
+
+    for j in range(0, len(vals)):
+        if j == len(vals)-1:
+            query = query + "'" + str(vals[j]) + "'"
+        else:
+            query = query + "'" + str(vals[j]) + "',"
+
+    query += ")"
+
+
+
+    cur.execute(query)
+
+    
+    conn.commit()
+
+
+
+
+
+
 # Create an instance of tkinter frame
 win = Tk()
 # Set the geometry of tkinter frame
 win.geometry("700x350")
 
 REQUIRED_COLS = {
-    "central": ["UID","Location", "Date", "Project"]
+    "central": ["Location", "Date", "Project"]
 }
 
 file_path = None
@@ -197,19 +230,28 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
 
     return data, failed
         
-def uploadData(data: dict):
+def initialize(data: dict, colKey: list, databaseTable: str):
+    assert len(data[next(iter(data))]) == len(colKey), "Column Key used for initialize function must be the same as the one corresponding to the data."
+    for row in data:
+        insertMultipleValues("initializeTest", colKey, data[row])
+
     return
 
 def printtest():
     print(getColHeaders(file_path))
 
-# PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-# ch = getColHeaders(PATH,"TestSheet1")
-# cm = mapNeededCols(REQUIRED_COLS["central"],ch)
-# d, _ = accumDataByUid(cm, 2, 44, PATH)
-# print(d)
 
-insertValue("test", "uid", "IT WORKS")
+
+
+
+PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
+ch = getColHeaders(PATH,"TestSheet1")
+cm = mapNeededCols(REQUIRED_COLS["central"],ch)
+d, _ = accumDataByRow(cm, 2, 44, PATH)
+initialize(d, REQUIRED_COLS["central"], "initializeTest")
+
+
+# insertValue("test", "uid", "IT WORKS")
 
 # ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 # ttk.Button(win, text="test", command=printtest).pack(pady=20)
