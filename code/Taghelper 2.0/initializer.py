@@ -69,7 +69,7 @@ win = Tk()
 win.geometry("700x350")
 
 REQUIRED_COLS = {
-    "central": ["Location", "Date", "Project"]
+    "central": ["UID","Location", "Date", "Project"]
 }
 
 file_path = None
@@ -132,9 +132,9 @@ def mapNeededCols(colKey: list, headers: list) -> dict:
     return colMap
 
 
-def accumData(colMap: dict, firstRow: int, lastRow: int, path: str):
+def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
     """
-    Takes a colMap and ma
+    Takes a colMap and maps data in required columns to row number.
     """
     data = {}
     badCells = []
@@ -163,6 +163,36 @@ def accumData(colMap: dict, firstRow: int, lastRow: int, path: str):
     return data, failed
 
 
+
+def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
+    """
+    Takes a colMap and maps data in required columns to UID.
+    """
+    data = {}
+    badCells = []
+    failed = False
+    wb = openpyxl.load_workbook(path, data_only=True)
+    ws = wb["TestSheet1"]
+    for row in range(firstRow, lastRow+1):
+        data[str(ws.cell(row=row, column=colMap["UID"]).value)] = []
+    for header in colMap:
+        for row in range(firstRow, lastRow+1):
+            cell = ws.cell(row=row, column=colMap[header])
+            if cell.value != None:
+                data[str(ws.cell(row=row, column=colMap["UID"]).value)] += [cell.value]
+            else:
+                failed = True
+                badCells += [(row, header, colMap[header])]
+    
+
+    
+    if failed:
+        logging.warning("The Following cells are empty! Please check sheet and continue after updating!")
+        for t in badCells:
+            print(f"Row: {t[0]}, Col: {t[2]}, Col Heading: {t[1]}")
+
+
+    return data, failed
         
 def uploadData(data: dict):
     return
@@ -173,7 +203,7 @@ def printtest():
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
 ch = getColHeaders(PATH,"TestSheet1")
 cm = mapNeededCols(REQUIRED_COLS["central"],ch)
-d, _ = accumData(cm, 2, 44, PATH)
+d, _ = accumDataByUid(cm, 2, 44, PATH)
 print(d)
 # insertValue("test", "UUID", "IT WORKS")
 # ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
