@@ -1,3 +1,4 @@
+#<Dylan Fritz - dfritz1211@gmail.com>
 import mariadb
 import sys
 import openpyxl
@@ -10,15 +11,62 @@ import os
 
 import getpass
 
+from dbhelper import *
+
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
 
-# # Create an instance of tkinter frame
-# win = Tk()
-# # Set the geometry of tkinter frame
-# win.geometry("700x350")
+try:
+    conn = mariadb.connect(
+        user=os.getlogin(),
+        password=getpass.getpass(prompt='Database user password: '),
+        host="10.16.0.101", #Nebula's relational ip!
+        port=3306,
+        database="testing"
+    )
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
+    sys.exit(1)
+
+cur = conn.cursor()
+
+
+
+def insertValue(dbTable,dbCol,value):
+    '''
+    Inserts a single value to the connected database
+
+    Parameters:
+        str dbTable (name of table in connected database)
+        str dbCol (name of col in connected database)
+        str value (what is to be inserted)
+        obj cur (database cursor)
+        obj con (database connection)
+
+    Return:
+        void
+
+    '''
+    assert conn != None, "No database connection"
+
+    query = f"INSERT INTO {dbTable} ({dbCol}) VALUES (?)"
+
+    val = (value,)
+
+    
+
+    cur.execute(query,val)
+
+    
+    conn.commit()
+
+
+# Create an instance of tkinter frame
+win = Tk()
+# Set the geometry of tkinter frame
+win.geometry("700x350")
 
 REQUIRED_COLS = {
     "central": ["Location", "Date", "Project"]
@@ -26,7 +74,7 @@ REQUIRED_COLS = {
 
 file_path = None
 
-def open_file():
+def open_file() -> None:
     '''
     Opens a choose file widget
     '''
@@ -44,10 +92,13 @@ def open_file():
       Label(win, text=str(filepath), font=('Aerial 11'))
  
 
-def getColHeaders(path):
+def getColHeaders(path: str, sheet: str) -> list:
+    """
+    Return a list of all column headers in a worksheet.
+    """
 
     wb = openpyxl.load_workbook(path, data_only=True)
-    ws = wb["TestSheet1"]
+    ws = wb[sheet]
 
     numCols = ws.max_column
     headers = []
@@ -56,14 +107,18 @@ def getColHeaders(path):
 
     return headers
 
-def mapNeededCols(colKey, headers):
+def mapNeededCols(colKey: list, headers: list) -> dict:
+    """ 
+    Creates a mapping of required col names (given by a column key list) to their SPREADSHEET indices.
+    Spreadsheet indices start at 1, not 0.
+    """
     colMap = {}
     failed = False
     failedList = []
     for key in colKey:
         try:
             if headers.index(key) >= 0:
-                colMap[key] = headers.index(key)
+                colMap[key] = headers.index(key)+1 #adding 1 to change into spreadsheet index
         except ValueError:
             failed = True
             failedList.append(key)
@@ -75,18 +130,52 @@ def mapNeededCols(colKey, headers):
         return
 
     return colMap
-        
 
+
+def accumData(colMap: dict, firstRow: int, lastRow: int, path: str):
+    """
+    Takes a colMap and ma
+    """
+    data = {}
+    badCells = []
+    failed = False
+    wb = openpyxl.load_workbook(path, data_only=True)
+    ws = wb["TestSheet1"]
+    for row in range(firstRow, lastRow+1):
+        data[str(row)] = []
+    for header in colMap:
+        for row in range(firstRow, lastRow+1):
+            cell = ws.cell(row=row, column=colMap[header])
+            if cell.value != None:
+                data[str(row)] += [cell.value]
+            else:
+                failed = True
+                badCells += [(row, header, colMap[header])]
+    
+
+    
+    if failed:
+        logging.warning("The Following cells are empty! Please check sheet and continue after updating!")
+        for t in badCells:
+            print(f"Row: {t[0]}, Col: {t[2]}, Col Heading: {t[1]}")
+
+
+    return data, failed
+
+
+        
+def uploadData(data: dict):
+    return
 
 def printtest():
     print(getColHeaders(file_path))
 
-
-test1 = ["key1", "key2", "key3"]
-test2 = ["key1", "random", "key3", "key"]
-
-
-logging.debug(mapNeededCols(test1, test2))
+PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
+ch = getColHeaders(PATH,"TestSheet1")
+cm = mapNeededCols(REQUIRED_COLS["central"],ch)
+d, _ = accumData(cm, 2, 44, PATH)
+print(d)
+# insertValue("test", "UUID", "IT WORKS")
 # ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
 # ttk.Button(win, text="test", command=printtest).pack(pady=20)
 
