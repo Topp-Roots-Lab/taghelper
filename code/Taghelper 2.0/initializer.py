@@ -70,6 +70,8 @@ def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD 
     global cur, conn
     assert conn != None, "No database connection"
 
+    cols = list(cols)
+
     logging.debug(table)
 
     query = f"INSERT INTO {table} ("
@@ -108,7 +110,9 @@ win = Tk()
 win.geometry("700x350")
 
 REQUIRED_COLS = {
-    "central": ["Location", "Date", "Project"]
+    "central": {"Location": "int",
+                "Date": "str",
+                "Project": "int"}
 }
 
 file_path = None
@@ -146,7 +150,7 @@ def getColHeaders(path: str, sheet: str) -> list:
 
     return headers
 
-def mapNeededCols(colKey: list, headers: list) -> dict:
+def mapNeededCols(colKey: dict, headers: list) -> dict:
     """ 
     Creates a mapping of required col names (given by a column key list) to their SPREADSHEET indices.
     Spreadsheet indices start at 1, not 0.
@@ -154,7 +158,7 @@ def mapNeededCols(colKey: list, headers: list) -> dict:
     colMap = {}
     failed = False
     failedList = []
-    for key in colKey:
+    for key in colKey.keys():
         try:
             if headers.index(key) >= 0:
                 colMap[key] = headers.index(key)+1 #adding 1 to change into spreadsheet index
@@ -233,11 +237,14 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
 
     return data, failed
         
-def initialize(data: dict, colKey: list, databaseTable: str):
-    assert len(data[next(iter(data))]) == len(colKey), "Column Key used for initialize function must be the same as the one corresponding to the data."
+def initialize(data: dict, colKey: dict, databaseTable: str):
+    assert len(data[next(iter(data))]) == len(colKey.keys()), "Column Key used for initialize function must be the same as the one corresponding to the data."
     for row in data:
-        insertMultipleValues(databaseTable, colKey, data[row])
+        insertMultipleValues(databaseTable, colKey.keys(), data[row])
 
+    return
+
+def validateTypes(data: dict, colKey: dict):
     return
 
 def printtest():
