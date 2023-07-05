@@ -18,6 +18,13 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
+REQUIRED_COLS = {
+    "central": {"Location": int,
+                "Date": str,
+                "Project": int}
+}
+
+
 try:
     conn = mariadb.connect(
         user=os.getlogin(),
@@ -109,11 +116,11 @@ win = Tk()
 # Set the geometry of tkinter frame
 win.geometry("700x350")
 
-REQUIRED_COLS = {
-    "central": {"Location": "int",
-                "Date": "str",
-                "Project": "int"}
-}
+
+
+# Used to define required columns for each specific database table. Also defines field data type that will be used for validation.
+
+
 
 file_path = None
 
@@ -245,20 +252,46 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
     return
 
 def validateTypes(data: dict, colKey: dict):
-    return
+    failed = False
+
+
+    for row in data:
+        for i in range(0, len(data[row])):
+            if type(data[row][i]) != list(colKey.values())[i]:
+                logging.warning(f"Warning: Value {data[row][i]} in Row/UID {row}, Column {list(colKey.keys())[i]} is of improper type. Expected: {list(colKey.values())[i]}. Got {type(data[row][i])}. Please correct this before uploading!")
+                failed = True
+
+    return failed
 
 def printtest():
     print(getColHeaders(file_path))
 
 
-
-
+def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str):
+    columnHeaders = getColHeaders(path, sheetName)
+    colMap = mapNeededCols(colKey, columnHeaders)
+    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path)
+    print(data)
+    if failed:
+        logging.error("ABORTING FOR EMPTY CELLS")
+        return 1
+    failed = validateTypes(data, colKey)
+    if failed:
+        logging.error("ABORTING FOR IMPROPER TYPING")
+        return 1
+    initialize(data, colKey, databaseTable)
+    return 0
 
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-ch = getColHeaders(PATH,"TestSheet1")
-cm = mapNeededCols(REQUIRED_COLS["central"],ch)
-d, _ = accumDataByRow(cm, 2, 44, PATH)
-initialize(d, REQUIRED_COLS["central"], "init2")
+_ = uploadSheet(PATH, REQUIRED_COLS["central"], 2, 44, "init2", "TestSheet1")
+
+
+# PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
+# ch = getColHeaders(PATH,"TestSheet1")
+# cm = mapNeededCols(REQUIRED_COLS["central"],ch)
+# d, _ = accumDataByRow(cm, 2, 44, PATH)
+# _ = validateTypes(d, REQUIRED_COLS["central"])
+# initialize(d, REQUIRED_COLS["central"], "init2")
 
 
 # insertValue("test", "uid", "IT WORKS")
