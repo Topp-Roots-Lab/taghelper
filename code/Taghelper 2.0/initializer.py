@@ -1,4 +1,4 @@
-#<Dylan Fritz - dfritz1211@gmail.com>
+# <Dylan Fritz - dfritz1211@gmail.com>
 import mariadb
 import sys
 import openpyxl
@@ -66,9 +66,11 @@ def insertValue(dbTable,dbCol,value):
     conn.commit()
 
 
-def insertMultipleValues(table: str, cols: list, vals: list):
+def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD VARCHAR (str) RN! Needs to be fixed to handle int, float, date etc
     global cur, conn
     assert conn != None, "No database connection"
+
+    logging.debug(table)
 
     query = f"INSERT INTO {table} ("
     for i in range(0,len(cols)):
@@ -80,6 +82,7 @@ def insertMultipleValues(table: str, cols: list, vals: list):
     query += ") VALUES ("
 
     for j in range(0, len(vals)):
+        logging.debug(str(vals[j]))
         if j == len(vals)-1:
             query = query + "'" + str(vals[j]) + "'"
         else:
@@ -233,7 +236,7 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
 def initialize(data: dict, colKey: list, databaseTable: str):
     assert len(data[next(iter(data))]) == len(colKey), "Column Key used for initialize function must be the same as the one corresponding to the data."
     for row in data:
-        insertMultipleValues("initializeTest", colKey, data[row])
+        insertMultipleValues(databaseTable, colKey, data[row])
 
     return
 
@@ -248,7 +251,7 @@ PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
 ch = getColHeaders(PATH,"TestSheet1")
 cm = mapNeededCols(REQUIRED_COLS["central"],ch)
 d, _ = accumDataByRow(cm, 2, 44, PATH)
-initialize(d, REQUIRED_COLS["central"], "initializeTest")
+initialize(d, REQUIRED_COLS["central"], "init2")
 
 
 # insertValue("test", "uid", "IT WORKS")
