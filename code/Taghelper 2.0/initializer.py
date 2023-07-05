@@ -26,14 +26,14 @@ REQUIRED_COLS = {
 
 
 try:
-    conn = mariadb.connect(
+    connection = mariadb.connect(
         user=os.getlogin(),
         password=getpass.getpass(prompt='Database user password: '),
         host="10.16.0.101", #Nebula's relational ip!
         port=3306,
         database="testing"
     )
-    cur = conn.cursor()
+    dbcursor = connection.cursor()
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
@@ -50,15 +50,14 @@ def insertValue(dbTable,dbCol,value):
         str dbTable (name of table in connected database)
         str dbCol (name of col in connected database)
         str value (what is to be inserted)
-        obj cur (database cursor)
-        obj con (database connection)
+
 
     Return:
         void
 
     '''
-    global cur, conn
-    assert conn != None, "No database connection"
+    global dbcursor, connection
+    assert connection != None, "No database connection"
 
     query = f"INSERT INTO {dbTable} ({dbCol}) VALUES ('{value}')"
 
@@ -66,16 +65,16 @@ def insertValue(dbTable,dbCol,value):
 
     
 
-    # cur.execute(query,val)
-    cur.execute(query)
+    # dbcursor.execute(query,val)
+    dbcursor.execute(query)
 
     
-    conn.commit()
+    connection.commit()
 
 
 def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD VARCHAR (str) RN! Needs to be fixed to handle int, float, date etc
-    global cur, conn
-    assert conn != None, "No database connection"
+    global dbcursor, connection
+    assert connection != None, "No database connection"
 
     cols = list(cols)
 
@@ -101,10 +100,10 @@ def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD 
 
 
 
-    cur.execute(query)
+    dbcursor.execute(query)
 
     
-    conn.commit()
+    connection.commit()
 
 
 
@@ -112,9 +111,9 @@ def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD 
 
 
 # Create an instance of tkinter frame
-win = Tk()
+tkwindow = Tk()
 # Set the geometry of tkinter frame
-win.geometry("700x350")
+tkwindow.geometry("700x350")
 
 
 
@@ -139,7 +138,7 @@ def open_file() -> None:
       assert filepath != None, "Should have a file path"
       assert os.path.isfile(filepath)
       
-      Label(win, text=str(filepath), font=('Aerial 11'))
+      Label(tkwindow, text=str(filepath), font=('Aerial 11'))
  
 
 def getColHeaders(path: str, sheet: str) -> list:
@@ -147,13 +146,13 @@ def getColHeaders(path: str, sheet: str) -> list:
     Return a list of all column headers in a worksheet.
     """
 
-    wb = openpyxl.load_workbook(path, data_only=True)
-    ws = wb[sheet]
+    workbook = openpyxl.load_workbook(path, data_only=True)
+    worksheet = workbook[sheet]
 
-    numCols = ws.max_column
+    numCols = worksheet.max_column
     headers = []
     for i in range(1, numCols+1):
-        headers.append(str(ws.cell(row=1, column=i).value))
+        headers.append(str(worksheet.cell(row=1, column=i).value))
 
     return headers
 
@@ -189,13 +188,13 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
     data = {}
     badCells = []
     failed = False
-    wb = openpyxl.load_workbook(path, data_only=True)
-    ws = wb["TestSheet1"]
+    workbook = openpyxl.load_workbook(path, data_only=True)
+    worksheet = workbook["TestSheet1"]
     for row in range(firstRow, lastRow+1):
         data[str(row)] = []
     for header in colMap:
         for row in range(firstRow, lastRow+1):
-            cell = ws.cell(row=row, column=colMap[header])
+            cell = worksheet.cell(row=row, column=colMap[header])
             if cell.value != None:
                 data[str(row)] += [cell.value]
             else:
@@ -221,15 +220,15 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
     data = {}
     badCells = []
     failed = False
-    wb = openpyxl.load_workbook(path, data_only=True)
-    ws = wb["TestSheet1"]
+    workbook = openpyxl.load_workbook(path, data_only=True)
+    worksheet = workbook["TestSheet1"]
     for row in range(firstRow, lastRow+1):
-        data[str(ws.cell(row=row, column=colMap["UID"]).value)] = []
+        data[str(worksheet.cell(row=row, column=colMap["UID"]).value)] = []
     for header in colMap:
         for row in range(firstRow, lastRow+1):
-            cell = ws.cell(row=row, column=colMap[header])
+            cell = worksheet.cell(row=row, column=colMap[header])
             if cell.value != None:
-                data[str(ws.cell(row=row, column=colMap["UID"]).value)] += [cell.value]
+                data[str(worksheet.cell(row=row, column=colMap["UID"]).value)] += [cell.value]
             else:
                 failed = True
                 badCells += [(row, header, colMap[header])]
@@ -296,10 +295,10 @@ _ = uploadSheet(PATH, REQUIRED_COLS["central"], 2, 44, "init2", "TestSheet1")
 
 # insertValue("test", "uid", "IT WORKS")
 
-# ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
-# ttk.Button(win, text="test", command=printtest).pack(pady=20)
+# ttk.Button(tkwindow, text="Broworksheete", command=open_file).pack(pady=20)
+# ttk.Button(tkwindow, text="test", command=printtest).pack(pady=20)
 
-# win.mainloop()
+# tkwindow.mainloop()
 
-cur.close()
-conn.close()
+dbcursor.close()
+connection.close()
