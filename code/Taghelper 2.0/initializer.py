@@ -72,7 +72,18 @@ def insertValue(dbTable,dbCol,value):
     connection.commit()
 
 
-def insertMultipleValues(table: str, cols: list, vals: list): # ONLY CAN UPLOAD VARCHAR (str) RN! Needs to be fixed to handle int, float, date etc
+def insertMultipleValues(table: str, cols: list, vals: list): 
+    """
+        Inserts a list of values into the same database row.
+
+        Parameters:
+            str table: The name of the database table being inserted to.
+            list cols: The list of column names corresponding to the values being added. Assumes the columns and values are in the same order.
+            list vals: The actual list of values being pushed to database.
+        
+        Return: 
+            void
+    """
     global dbcursor, connection
     assert connection != None, "No database connection"
 
@@ -144,6 +155,13 @@ def open_file() -> None:
 def getColHeaders(path: str, sheet: str) -> list:
     """
     Return a list of all column headers in a worksheet.
+
+    Parameters:
+        str path: The (explicit) path to the Excel workbook being read.
+        str sheet: The name of the worksheet tab within the used workbook.
+
+    Return:
+        list headers: A list of all values in the first row of a worksheet.
     """
 
     workbook = openpyxl.load_workbook(path, data_only=True)
@@ -160,6 +178,13 @@ def mapNeededCols(colKey: dict, headers: list) -> dict:
     """ 
     Creates a mapping of required col names (given by a column key list) to their SPREADSHEET indices.
     Spreadsheet indices start at 1, not 0.
+
+    Parameters:
+        dict colKey: A configuration dictionary that describes the required features of a specific database table. Contains requried column names and their respective data types. Pairing is str:class.
+        list headers: A list containing all headers in a worksheet.
+
+    Return:
+        dict colMap: A dictionary that maps the required column names to their spreadsheet index in the input sheet. Pairing is str:int.
     """
     colMap = {}
     failed = False
@@ -178,12 +203,23 @@ def mapNeededCols(colKey: dict, headers: list) -> dict:
             logging.warning(col)
         return
 
+    print(colMap)
     return colMap
 
 
 def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
     """
     Takes a colMap and maps data in required columns to row number.
+
+    Parameters:
+        dict colMap: A dictionary that maps the required column names to their spreadsheet index in the input sheet.
+        int firstRow: A number that signifies the first row in the input spreadsheet that contains data needing to be uploaded.
+        int lastRow: A number that signifies the last row in the input spreadsheet that contains data needing to be uploaded.
+        str path: The (explicit) path to the Excel workbook being read.
+
+    Return:
+        dict data: A dictionary that maps the row number to a list of data values in that row. Pairing is str:list.
+        bool failed: True if some cells were empty. False if all cells contained a value.
     """
     data = {}
     badCells = []
@@ -216,6 +252,16 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
 def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
     """
     Takes a colMap and maps data in required columns to UID.
+
+    Parameters:
+        dict colMap: A dictionary that maps the required column names to their spreadsheet index in the input sheet.
+        int firstRow: A number that signifies the first row in the input spreadsheet that contains data needing to be uploaded.
+        int lastRow: A number that signifies the last row in the input spreadsheet that contains data needing to be uploaded.
+        str path: The (explicit) path to the Excel workbook being read.
+
+    Return:
+        dict data: A dictionary that maps the UID to a list of data values in that row. Pairing is str:list.
+        bool failed: True if some cells were empty. False if all cells contained a value.
     """
     data = {}
     badCells = []
@@ -244,6 +290,17 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
     return data, failed
         
 def initialize(data: dict, colKey: dict, databaseTable: str):
+    """
+        A wrapper function that loops through all rows in a data dictionary and calls insertMultipleValues to insert it to the database.
+
+        Parameters:
+            dict data: A dictionary that maps the rowNum/UID to a list of data values in that row. Pairing is str:list.
+            dict colKey: A configuration dictionary that describes the required features of a specific database table. Contains requried column names and their respective data types. Pairing is str:class.
+            str databaseTable: The name of the database table being inserted to.
+
+        Return:
+            void
+    """
     assert len(data[next(iter(data))]) == len(colKey.keys()), "Column Key used for initialize function must be the same as the one corresponding to the data."
     for row in data:
         insertMultipleValues(databaseTable, colKey.keys(), data[row])
@@ -251,6 +308,16 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
     return
 
 def validateTypes(data: dict, colKey: dict):
+    """
+        A function that ensures all values in a data dictionary are the correct type for their respective database column.
+
+        Parameters:
+            dict data: A dictionary that maps the rowNum/UID to a list of data values in that row. Pairing is str:list.
+            dict colKey: A configuration dictionary that describes the required features of a specific database table. Contains requried column names and their respective data types. Pairing is str:class.
+
+        Return:
+            bool failed: True if at least one value is the wrong type. False if all values are the proper type.
+    """
     failed = False
 
 
@@ -262,11 +329,12 @@ def validateTypes(data: dict, colKey: dict):
 
     return failed
 
-def printtest():
-    print(getColHeaders(file_path))
+# def printtest():
+#     print(getColHeaders(file_path))
 
 
-def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str):
+def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str): # TODO Add Guard Clause for mapNeededCols
+    
     columnHeaders = getColHeaders(path, sheetName)
     colMap = mapNeededCols(colKey, columnHeaders)
     data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path)
