@@ -174,7 +174,7 @@ def getColHeaders(path: str, sheet: str) -> list:
 
     return headers
 
-def mapNeededCols(colKey: dict, headers: list) -> dict:
+def mapNeededCols(colKey: dict, headers: list):
     """ 
     Creates a mapping of required col names (given by a column key list) to their SPREADSHEET indices.
     Spreadsheet indices start at 1, not 0.
@@ -185,6 +185,7 @@ def mapNeededCols(colKey: dict, headers: list) -> dict:
 
     Return:
         dict colMap: A dictionary that maps the required column names to their spreadsheet index in the input sheet. Pairing is str:int.
+        bool failed: A status boolean that is True if the input sheet is missing a required column and False if all required columns are present.
     """
     colMap = {}
     failed = False
@@ -201,10 +202,10 @@ def mapNeededCols(colKey: dict, headers: list) -> dict:
         logging.warning('MISSING FOLLOWING REQUIRED COLUMNS:')
         for col in failedList:
             logging.warning(col)
-        return
+
 
     print(colMap)
-    return colMap
+    return colMap, failed
 
 
 def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
@@ -333,10 +334,13 @@ def validateTypes(data: dict, colKey: dict):
 #     print(getColHeaders(file_path))
 
 
-def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str): # TODO Add Guard Clause for mapNeededCols
+def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str) -> int: 
     
     columnHeaders = getColHeaders(path, sheetName)
-    colMap = mapNeededCols(colKey, columnHeaders)
+    colMap, failed = mapNeededCols(colKey, columnHeaders)
+    if failed:
+        logging.error("ABORTING FOR MISSING REQURIED COLUMNS")
+        return 1
     data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path)
     print(data)
     if failed:
