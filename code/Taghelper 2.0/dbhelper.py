@@ -16,8 +16,16 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+# def debugLogger(func):
+#     def inner(*args, **kwargs):
+#         print(f"In {func.__name__}")
+#         funcreturn = func(*args,**kwargs)
+#         print(f"Exiting {func.__name__}. Returning {funcreturn}.")
+#         return funcreturn
+#     return inner
 
 
+# @debugLogger
 def getColHeaders(path: str, sheet: str) -> list:
     """
     Return a list of all column headers in a worksheet.
@@ -75,8 +83,20 @@ def mapNeededCols(colKey: dict, headers: list):
     print(colMap)
     return colMap, failed
 
+def findUidCol(headers: list):
+    failed = False
+    colnum = None
+    try:
+        if headers.index("UID") >= 0:
+            colnum = headers.index("UID")+1
 
-def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
+    except ValueError:
+        logging.warning("No Explicit UID Column Found. Make sure there is an empty column titled 'UID' where UIDs should go.")
+        failed = True
+    return colnum, failed
+
+
+def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, nullUid=False):
     """
     Takes a colMap and maps data in required columns to row number.
 
@@ -102,6 +122,7 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str):
             cell = worksheet.cell(row=row, column=colMap[header])
             if cell.value != None:
                 data[str(row)] += [cell.value]
+            
             else:
                 failed = True
                 badCells += [(row, header, colMap[header])]
@@ -182,3 +203,38 @@ def validateTypes(data: dict, colKey: dict):
                 failed = True
 
     return failed
+
+
+def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
+    '''
+    Writes to a column (col_n) of (path).xlsx the values from (firstid) to (lastid) starting on row (startrow) and incrementing down the column.
+
+    Parameters:
+        str path (The path to the .xlsx file to write to. Must end in .xlsx.)
+        int firstid (The first uid assigned to the first row to be written to.)
+        int lastid (The last id belonging to the last row in this sheet.)
+        int col_n (The column to write id values to. Sheet columns are idexed from left to right starting at 1. (A is 1, B is 2, etc.))
+        str sheetName (The name of the excel sheet to be witten to.)
+        int startrow [optional] (The first row that contains data needing an id value (not col headers etc.). Default value 1 (row 1).)
+
+    Return:
+        void
+
+    '''
+    wb = openpyxl.load_workbook(path, data_only=True)
+    
+   
+    ws = wb[sheetName]
+    rowi = startrow
+
+    assert firstid != None, "Must insert values to generate ids"
+    assert lastid != None, "Must insert values to generate ids"
+
+    for i in range(firstid, lastid+1):
+        cell = ws.cell(row = rowi, column = col_n)
+        cell.value = str(i)
+        rowi+=1
+
+    wb.save(path)
+    wb.close()
+    print("write successful")

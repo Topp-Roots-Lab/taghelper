@@ -22,6 +22,7 @@ REQUIRED_COLS = {
     "central": {"Location": int,
                 "Date": str,
                 "Project": int}
+
 }
 
 
@@ -112,9 +113,10 @@ def insertMultipleValues(table: str, cols: list, vals: list):
 
 
     dbcursor.execute(query)
-
+    id = dbcursor.lastrowid
     
     connection.commit()
+    return id
 
 
 
@@ -166,11 +168,15 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
         Return:
             void
     """
+    firstid = None
+    
     assert len(data[next(iter(data))]) == len(colKey.keys()), "Column Key used for initialize function must be the same as the one corresponding to the data."
     for row in data:
-        insertMultipleValues(databaseTable, colKey.keys(), data[row])
-
-    return
+        thisid = insertMultipleValues(databaseTable, colKey.keys(), data[row])
+        if firstid == None:
+            firstid = thisid
+    lastid = thisid
+    return firstid, lastid
 
 
 
@@ -182,7 +188,7 @@ def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, da
     if failed:
         logging.error("ABORTING FOR MISSING REQURIED COLUMNS")
         return 1
-    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path)
+    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path, nullUid=True)
     print(data)
     if failed:
         logging.error("ABORTING FOR EMPTY CELLS")
@@ -191,11 +197,16 @@ def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, da
     if failed:
         logging.error("ABORTING FOR IMPROPER TYPING")
         return 1
-    initialize(data, colKey, databaseTable)
+    uidCol, failed = findUidCol(columnHeaders)
+    if failed:
+        logging.error("ABORTING FOR MISSING UID COLUMN")
+        return 1
+    firstid, lastid = initialize(data, colKey, databaseTable)
+    write_wb(path, firstid, lastid, uidCol, sheetName, startrow=firstDataRow)
     return 0                   
 
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-_ = uploadSheet(PATH, REQUIRED_COLS["central"], 2, 44, "init2", "TestSheet1")
+_ = uploadSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
 
 
 # PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
