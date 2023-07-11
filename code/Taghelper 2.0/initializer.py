@@ -83,7 +83,7 @@ def insertMultipleValues(table: str, cols: list, vals: list):
             list vals: The actual list of values being pushed to database.
         
         Return: 
-            void
+            int id: The UID of the row uploaded.
     """
     global dbcursor, connection
     assert connection != None, "No database connection"
@@ -166,7 +166,8 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
             str databaseTable: The name of the database table being inserted to.
 
         Return:
-            void
+            int firstid: The UID of the first row uploaded.
+            int lastid: the UID of the last row uploaded.
     """
     firstid = None
     
@@ -182,6 +183,21 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
 
 
 def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str) -> int: 
+
+    """
+    A function that accumulates all data in a initializer sheet, initializes the values in the database, and adds the new UIDs to the sheet.
+
+    Parameters:
+        str path: The (explicit) path to the Excel workbook being read.
+        dict colKey: A configuration dictionary that describes the required features of a specific database table. Contains requried column names and their respective data types. Pairing is str:class.
+        int firstDataRow: A number that signifies the first row in the input spreadsheet that contains data needing to be uploaded.
+        int lastDataRow: A number that signifies the last row in the input spreadsheet that contains data needing to be uploaded.
+        str databaseTable: The name of the database table being inserted to.
+        str sheetName: The name of the worksheet tab within the used workbook.
+    
+    Return:
+        int status: A status int showing if the function ran without error or exiting early. 0 if successful, 1 for early exit.
+    """
     
     columnHeaders = getColHeaders(path, sheetName)
     colMap, failed = mapNeededCols(colKey, columnHeaders)

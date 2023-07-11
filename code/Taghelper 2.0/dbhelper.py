@@ -237,4 +237,4 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
 
     wb.save(path)
     wb.close()
-    print("write successful")
+    logging.info("Write successful!")
