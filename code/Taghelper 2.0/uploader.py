@@ -78,15 +78,52 @@ def insertMultipleValues(table: str, cols: list, vals: list):
 
     query += ")"
 
-
+    logging.debug(query)
 
     dbcursor.execute(query)
 
     
     connection.commit()
 
+def upload(data: dict, colKey: dict, databaseTable: str):
+    """
+        A wrapper function that loops through all rows in a data dictionary and calls insertMultipleValues to insert it to the database.
+
+        Parameters:
+            dict data: A dictionary that maps the rowNum/UID to a list of data values in that row. Pairing is str:list.
+            dict colKey: A configuration dictionary that describes the required features of a specific database table. Contains requried column names and their respective data types. Pairing is str:class.
+            str databaseTable: The name of the database table being inserted to.
+
+        Return:
+            int firstid: The UID of the first row uploaded.
+            int lastid: the UID of the last row uploaded.
+    """
+    
+    assert len(data[next(iter(data))]) == len(colKey.keys()), "Column Key used for initialize function must be the same as the one corresponding to the data."
+    for row in data:
+        insertMultipleValues(databaseTable, colKey.keys(), data[row])
+
+
 
 
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-print(getColHeaders(PATH, "TestSheet2"))
+
+
+
+def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str) -> int:
+    headers = getColHeaders(path, sheetname)
+    colMap, failed = mapNeededCols(colKey, headers)
+    if failed:
+        logging.error("EXITING FOR MISSING REQURIED COLUMNS")
+        return 1
+    data, failed = accumDataByUid(colMap, firstDataRow, lastDataRow, path, sheetname, uidAsData=True)
+    if failed:
+        logging.error("EXITING FOR EMPTY CELLS")
+        return 1
+    failed = validateTypes(data, colKey)
+    if failed:
+        logging.error("EXITING FOR MISMATCHED TYPING")
+        return 1
+    upload(data, colKey, databaseTable)
+    return 0
 

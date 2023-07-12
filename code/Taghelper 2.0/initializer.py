@@ -182,7 +182,7 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
 
 
 
-def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str) -> int: 
+def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str) -> int: 
 
     """
     A function that accumulates all data in a initializer sheet, initializes the values in the database, and adds the new UIDs to the sheet.
@@ -222,7 +222,7 @@ def uploadSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, da
     return 0                   
 
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-_ = uploadSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
+_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
 
 
 # PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'

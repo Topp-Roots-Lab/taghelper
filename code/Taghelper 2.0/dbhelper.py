@@ -140,7 +140,7 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, nullUid
 
 
 
-def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
+def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str, uidAsData=False):
     """
     Takes a colMap and maps data in required columns to UID.
 
@@ -158,10 +158,13 @@ def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str):
     badCells = []
     failed = False
     workbook = openpyxl.load_workbook(path, data_only=True)
-    worksheet = workbook["TestSheet1"]
+    worksheet = workbook[sheet]
     for row in range(firstRow, lastRow+1):
+        print(str(worksheet.cell(row=row, column=colMap["UID"]).value))
         data[str(worksheet.cell(row=row, column=colMap["UID"]).value)] = []
     for header in colMap:
+        if header == "UID" and uidAsData != True:
+            continue
         for row in range(firstRow, lastRow+1):
             cell = worksheet.cell(row=row, column=colMap[header])
             if cell.value != None:
