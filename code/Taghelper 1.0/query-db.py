@@ -10,7 +10,7 @@ try:
 		password=getpass.getpass(prompt='Database user password: '),
 		host="10.16.0.101", #Nebula's relational ip!
 		port=3306,
-		database="tag_server"
+		database="testing"
 	)
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
@@ -19,11 +19,16 @@ except mariadb.Error as e:
 	
 	
 cur = conn.cursor()
-query = "SELECT * FROM tags"
+query = "SELECT * FROM biomass"
 value = ()
 cur.execute(query,value)
+response = []
 
-for uid, uuid in cur:
+for t in cur:
+    response += [t]
+    print(t)
+print(response)
+for uid, uuid in response:
     print(f"uid: {uid} uuid: {uuid}")
 
 conn.commit()

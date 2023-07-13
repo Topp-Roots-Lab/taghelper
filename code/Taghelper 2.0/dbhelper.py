@@ -31,7 +31,7 @@ def getColHeaders(path: str, sheet: str) -> list:
     Return a list of all column headers in a worksheet.
 
     Parameters:
-        str path: The (explicit) path to the Excel workbook being read.
+        str path: The (absolute) path to the Excel workbook being read.
         str sheet: The name of the worksheet tab within the used workbook.
 
     Return:
@@ -140,7 +140,7 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, nullUid
 
 
 
-def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str, uidAsData=False):
+def accumDataByUid(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str, uidAsData=True):
     """
     Takes a colMap and maps data in required columns to UID.
 

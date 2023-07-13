@@ -85,6 +85,44 @@ def insertMultipleValues(table: str, cols: list, vals: list):
     
     connection.commit()
 
+def verifyUID(uid: int, table: str) -> bool:
+    query = f"SELECT * FROM {table} WHERE {table}.UID = {str(uid)}"
+    dbcursor.execute(query)
+    response = []
+    for t in dbcursor:
+        print(t)
+        response += [t]
+    print(response)
+    
+    return len(response) >= 1
+
+def verifyDataUidsInit(data: dict) -> bool:
+    failed = False
+    falseUIDs = []
+    for uid in data:
+        if not verifyUID(uid, "central"):
+            failed = True
+            falseUIDs += [uid]
+    if failed:
+        logging.warning("The following UIDs are in your file but have not been initialized.")
+        for u in falseUIDs:
+            print(u)
+    return failed
+
+def ensureUIDsNotContained(data: dict, table: str) -> bool:
+    failed = False
+    falseUIDs = []
+    for uid in data:
+        if verifyUID(uid, table):
+            failed = True
+            falseUIDs += [uid]
+    if failed:
+        logging.warning(f"The following UIDs are in your file but already have a value in this table ({table}).")
+        for u in falseUIDs:
+            print(u)
+    return failed
+        
+
 def upload(data: dict, colKey: dict, databaseTable: str):
     """
         A wrapper function that loops through all rows in a data dictionary and calls insertMultipleValues to insert it to the database.
@@ -110,7 +148,7 @@ PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
 
 
 
-def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str) -> int:
+def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, allowRedundantUIDs=False) -> int:
     headers = getColHeaders(path, sheetname)
     colMap, failed = mapNeededCols(colKey, headers)
     if failed:
@@ -120,6 +158,17 @@ def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, last
     if failed:
         logging.error("EXITING FOR EMPTY CELLS")
         return 1
+    failed = verifyDataUidsInit(data)
+    if failed:
+        logging.error("EXITING FOR UNINITIALIZED UIDS")
+        return 1
+    
+    if not allowRedundantUIDs:
+        failed = ensureUIDsNotContained(data, databaseTable)
+        if failed:
+            logging.error("EXITING FOR REDUNDANT UIDS")
+            return 1
+        
     failed = validateTypes(data, colKey)
     if failed:
         logging.error("EXITING FOR MISMATCHED TYPING")
@@ -127,3 +176,6 @@ def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, last
     upload(data, colKey, databaseTable)
     return 0
 
+
+
+uploadSheet(PATH, "TestSheet2", REQUIRED_COLS["biomass"], 2, 38, "biomass", allowRedundantUIDs=True)
