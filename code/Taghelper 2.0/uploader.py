@@ -86,6 +86,16 @@ def insertMultipleValues(table: str, cols: list, vals: list):
     connection.commit()
 
 def verifyUID(uid: int, table: str) -> bool:
+    """
+    A function that checks if a database table contains a UID value.
+
+    Parameters:
+        int uid: The UID to be verified.
+        str table: The database table to check for the UID.
+
+    Return:
+        bool contained: True if the UID is present at least once in the table, False if not.
+    """
     query = f"SELECT * FROM {table} WHERE {table}.UID = {str(uid)}"
     dbcursor.execute(query)
     response = []
@@ -94,9 +104,20 @@ def verifyUID(uid: int, table: str) -> bool:
         response += [t]
     print(response)
     
-    return len(response) >= 1
+    contained = len(response) >= 1
+
+    return contained
 
 def verifyDataUidsInit(data: dict) -> bool:
+    """
+    A function that ensures all UIDs in a data dictionary are initialized.
+
+    Parameters:
+        dict data: The data dictionary to verify.
+    
+    Return:
+        bool failed: True if 1 or more UIDs in data is uninitialized. False if all UIDs have been initialized.
+    """
     failed = False
     falseUIDs = []
     for uid in data:
@@ -110,6 +131,16 @@ def verifyDataUidsInit(data: dict) -> bool:
     return failed
 
 def ensureUIDsNotContained(data: dict, table: str) -> bool:
+    """
+    A function that checks if a UID is already contained in a table.
+
+    Parameters: 
+        dict data: The data dictionary to verify.
+        str table: The database table to check for the UID.
+    
+    Return:
+        bool failed: True if 1 or more of the UIDs is already in the table. False if all UIDs are unique.
+    """
     failed = False
     falseUIDs = []
     for uid in data:
