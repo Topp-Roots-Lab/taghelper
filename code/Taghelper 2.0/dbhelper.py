@@ -241,3 +241,13 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
     wb.save(path)
     wb.close()
     logging.info("Write successful!")
+
+def getFilesOfExt(dir, ext):
+   filenames = []
+   for file in os.listdir(dir):
+      if file.endswith(ext):
+         filenames.append(os.path.realpath(file))
+      else:
+         continue
+   return filenames
+

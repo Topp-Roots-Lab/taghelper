@@ -142,8 +142,39 @@ def insertMultipleValues(table: str, cols: list, vals: list):
 
 
 
+
+
+
+# Create an instance of tkinter frame
+tkwindow = Tk()
+# Set the geometry of tkinter frame
+tkwindow.geometry("700x350")
+
+
+
 # Used to define required columns for each specific database table. Also defines field data type that will be used for validation.
 
+
+
+file_path = None
+
+def open_file() -> None:
+    '''
+    Opens a choose file widget
+    '''
+    global file_path
+    file = filedialog.askopenfile(mode='r', filetypes=[('Excel', '*.xlsx')])
+    if file:
+      filepath = os.path.relpath(file.name)
+      print(filepath)
+
+      file_path = filepath
+    
+      assert filepath != None, "Should have a file path"
+      assert os.path.isfile(filepath)
+      
+      Label(tkwindow, text=str(filepath), font=('Aerial 11'))
+ 
 
 
         
@@ -213,7 +244,7 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
     return 0                   
 
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-#initSheet(args.path, REQUIRED_COLS["central"], args.first_row, args.last_row, "central", args.sheet_name)
+_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
 
 
 
