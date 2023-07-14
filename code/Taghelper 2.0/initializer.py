@@ -15,7 +15,24 @@ from dbhelper import *
 
 import logging
 
+import argparse
+
 logging.basicConfig(level=logging.DEBUG)
+
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path", type=str, help="Path to the sheet.")
+    parser.add_argument("first-row", type=int, help="The first row number containing data.")
+    parser.add_argument("last-row", type=int, help="The last row number containing data.")
+    parser.add_argument("sheet-name", type=str, help="The name of the worksheet to upload.")
+
+    parser.add_argument("-d", "--dev", action="store_true", help="Print all debug text.")
+    parser.add_argument("-s", "--silent", action="store_true", help="Don't print anything except output and error to console.")
+
+    args = parser.parse_args()
+
+    return args
+
 
 
 REQUIRED_COLS = {
