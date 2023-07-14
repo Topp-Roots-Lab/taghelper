@@ -242,20 +242,6 @@ PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
 _ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
 
 
-# PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-# ch = getColHeaders(PATH,"TestSheet1")
-# cm = mapNeededCols(REQUIRED_COLS["central"],ch)
-# d, _ = accumDataByRow(cm, 2, 44, PATH)
-# _ = validateTypes(d, REQUIRED_COLS["central"])
-# initialize(d, REQUIRED_COLS["central"], "init2")
-
-
-# insertValue("test", "uid", "IT WORKS")
-
-# ttk.Button(tkwindow, text="Broworksheete", command=open_file).pack(pady=20)
-# ttk.Button(tkwindow, text="test", command=printtest).pack(pady=20)
-
-# tkwindow.mainloop()
 
 dbcursor.close()
 connection.close()
