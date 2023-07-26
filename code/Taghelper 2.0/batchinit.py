@@ -237,7 +237,7 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
     if failed:
         logging.error("ABORTING FOR MISSING REQURIED COLUMNS")
         return 1
-    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path, sheetName, nullUid=True)
+    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path, sheetName)
     print(data)
     if failed:
         logging.error("ABORTING FOR EMPTY CELLS")
@@ -258,17 +258,39 @@ PATH = 'C:\\Users\\topplab\\Desktop\\TEST\\IN\\Book1.xlsx'
 #_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "Initialize")
 
 
-def batchInit(folderPath):
+def batchInit(folderPath, firstDataRow):
+    assert not folderPath.endswith("\\"), "Input dir cannot end with a slash"
+    ckey = REQUIRED_COLS["central"]
     files = [x for x in os.listdir(folderPath) if x.endswith(".xlsx")]
+    parentDir = os.path.dirname(folderPath)
+
+
+    outputDirPath = os.path.join(parentDir, "OUT")
+    assert not os.path.exists(outputDirPath), "Must not already have an output directory!"
+    os.mkdir(outputDirPath)
+
     print(files)
+
     for file in files:
         print(f"Now Reading {file}.")
-        abspath = folderPath +"\\"+ file
-        colHead = getColHeaders(abspath, "Initialize")
-        print(colHead)
+        abspath = os.path.join(folderPath, file)
+        print(abspath)
+
+        workbook = openpyxl.load_workbook(abspath, data_only=True)
+        worksheet = workbook["Initialize"]
+        lRow = worksheet.max_row
+        workbook.close()
+
+        print(f"LAST ROW: {lRow}")
+
+        failed = initSheet(abspath, ckey, firstDataRow, lRow, "central", "Initialize")
+
+
+
+
     return
 
-batchInit("C:\\Users\\topplab\\Desktop\\TEST\\IN")
+batchInit("C:\\Users\\topplab\\Desktop\\TEST\\IN", 2)
 
 
 dbcursor.close()

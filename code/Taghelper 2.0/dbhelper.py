@@ -96,7 +96,7 @@ def findUidCol(headers: list):
     return colnum, failed
 
 
-def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str, nullUid=False):
+def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str):
     """
     Takes a colMap and maps data in required columns to row number.
 
