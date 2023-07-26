@@ -17,6 +17,17 @@ import logging
 
 import argparse
 
+class MissingInfoException(Exception):
+    def __init__(self, type) -> None:
+        self.type = type
+        self.message = f"ABORTING FOR MISSING INFO: {type}"
+        super().__init__(self.message)
+
+class ImproperTypingException(Exception):
+    def __init__(self) -> None:
+        self.message = f"ABORTING FOR IMPROPER TYPING"
+        super().__init__(self.message)
+
 
 
 def options():
@@ -204,7 +215,7 @@ def initialize(data: dict, colKey: dict, databaseTable: str):
 
 
 
-def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str) -> int: 
+def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, databaseTable: str, sheetName: str, runIfFailed=False) -> int: 
 
     """
     A function that accumulates all data in a initializer sheet, initializes the values in the database, and adds the new UIDs to the sheet.
