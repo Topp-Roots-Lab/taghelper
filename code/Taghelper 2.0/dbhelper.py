@@ -96,7 +96,7 @@ def findUidCol(headers: list):
     return colnum, failed
 
 
-def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, nullUid=False):
+def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, sheet: str, nullUid=False):
     """
     Takes a colMap and maps data in required columns to row number.
 
@@ -114,7 +114,7 @@ def accumDataByRow(colMap: dict, firstRow: int, lastRow: int, path: str, nullUid
     badCells = []
     failed = False
     workbook = openpyxl.load_workbook(path, data_only=True)
-    worksheet = workbook["TestSheet1"]
+    worksheet = workbook[sheet]
     for row in range(firstRow, lastRow+1):
         data[str(row)] = []
     for header in colMap:
@@ -242,12 +242,16 @@ def write_wb(path, firstid, lastid, col_n, sheetName, startrow=1):
     wb.close()
     logging.info("Write successful!")
 
+def mergeDict(dict1: dict, dict2: dict) -> dict:
+    return {**dict1, **dict2}
+
 def getFilesOfExt(dir, ext):
    filenames = []
    for file in os.listdir(dir):
-      if file.endswith(ext):
-         filenames.append(os.path.realpath(file))
-      else:
-         continue
+       filenames.append(os.path.abspath(file))
+    #   if file.endswith(ext) and os.path.isfile(file):
+    #      filenames.append(os.path.abspath(file))
+    #   else:
+    #      continue
    return filenames
 

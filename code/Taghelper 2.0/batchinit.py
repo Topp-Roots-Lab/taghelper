@@ -226,7 +226,7 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
     if failed:
         logging.error("ABORTING FOR MISSING REQURIED COLUMNS")
         return 1
-    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path, nullUid=True)
+    data, failed = accumDataByRow(colMap, firstDataRow, lastDataRow, path, sheetName, nullUid=True)
     print(data)
     if failed:
         logging.error("ABORTING FOR EMPTY CELLS")
@@ -243,10 +243,21 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
     write_wb(path, firstid, lastid, uidCol, sheetName, startrow=firstDataRow)
     return 0                   
 
-PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
-_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "TestSheet1")
+PATH = 'C:\\Users\\topplab\\Desktop\\TEST\\IN\\Book1.xlsx'
+#_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "Initialize")
 
 
+def batchInit(folderPath):
+    files = [x for x in os.listdir(folderPath) if x.endswith(".xlsx")]
+    print(files)
+    for file in files:
+        print(f"Now Reading {file}.")
+        abspath = folderPath +"\\"+ file
+        colHead = getColHeaders(abspath, "Initialize")
+        print(colHead)
+    return
+
+batchInit("C:\\Users\\topplab\\Desktop\\TEST\\IN")
 
 
 dbcursor.close()
