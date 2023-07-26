@@ -8,6 +8,7 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 import os
+import shutil
 
 import getpass
 
@@ -265,9 +266,13 @@ def batchInit(folderPath, firstDataRow):
     parentDir = os.path.dirname(folderPath)
 
 
-    outputDirPath = os.path.join(parentDir, "OUT")
-    assert not os.path.exists(outputDirPath), "Must not already have an output directory!"
-    os.mkdir(outputDirPath)
+    successDirPath = os.path.join(parentDir, "SUCCESS")
+    if not os.path.exists(successDirPath):
+        os.mkdir(successDirPath)
+
+    failedDirPath = os.path.join(parentDir, "FAILED")
+    if not os.path.exists(failedDirPath):
+        os.mkdir(failedDirPath)
 
     print(files)
 
@@ -284,6 +289,11 @@ def batchInit(folderPath, firstDataRow):
         print(f"LAST ROW: {lRow}")
 
         failed = initSheet(abspath, ckey, firstDataRow, lRow, "central", "Initialize")
+
+        if failed:
+            shutil.move(abspath, os.path.join(failedDirPath, file))
+        else:
+            shutil.move(abspath, os.path.join(successDirPath, file))
 
 
 
