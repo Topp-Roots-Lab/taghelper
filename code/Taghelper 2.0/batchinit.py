@@ -259,10 +259,19 @@ PATH = 'C:\\Users\\topplab\\Desktop\\TEST\\IN\\Book1.xlsx'
 #_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "Initialize")
 
 
-def batchInit(folderPath, firstDataRow):
+def batchInit(folderPath: str, firstDataRow: int):
+    """
+    A function that runs the initialization function on multiple files in a single provided input directory. The function then creates directories for files that were uploaded successfully and those which were not uploaded due to an error. 
+
+    Parameters:
+        str folderPath: The file path to the input directory.
+        int firstDataRow: The first row containing data. MUST BE THE SAME FOR ALL FILES INPUTTED.
+    Return:
+        void
+    """
     assert not folderPath.endswith("\\"), "Input dir cannot end with a slash"
     ckey = REQUIRED_COLS["central"]
-    files = [x for x in os.listdir(folderPath) if x.endswith(".xlsx")]
+    files = [x for x in os.listdir(folderPath) if x.endswith(".xlsx")] #all files in the input directory that are .xlsx
     parentDir = os.path.dirname(folderPath)
 
 
@@ -296,9 +305,6 @@ def batchInit(folderPath, firstDataRow):
             shutil.move(abspath, os.path.join(successDirPath, file))
 
 
-
-
-    return
 
 batchInit("C:\\Users\\topplab\\Desktop\\TEST\\IN", 2)
 

@@ -241,26 +241,26 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
 PATH = 'C:\\Users\\topplab\\Desktop\\Book1.xlsx'
 #initSheet(args.path, REQUIRED_COLS["central"], args.first_row, args.last_row, "central", args.sheet_name)
 
-def batchInit(parentDir: str, firstRow: int, sheetName: str):
+# def batchInit(parentDir: str, firstRow: int, sheetName: str):
     
-    files = getFilesOfExt(parentDir, ".xlsx")
-    print(files)
-    confirm = input(f"You will be initializing these {len(files)} files. Please check the file names and press y to continue, n to quit.").upper()
-    if confirm != "Y":
-        return 
-    parent = os.path.dirname(parentDir)
-    assert not os.path.exists(f"{parent}\\Uploaded"), f"{parent}\\Uploaded\\ Should not already exist."
-    os.mkdir(f"{parent}\\Uploaded")
-    for file in files:
-        wb = openpyxl.load_workbook(file, data_only=True)
-        ws = wb[sheetName]
-        lastDataRow = ws.max_row
+#     files = getFilesOfExt(parentDir, ".xlsx")
+#     print(files)
+#     confirm = input(f"You will be initializing these {len(files)} files. Please check the file names and press y to continue, n to quit.").upper()
+#     if confirm != "Y":
+#         return 
+#     parent = os.path.dirname(parentDir)
+#     assert not os.path.exists(f"{parent}\\Uploaded"), f"{parent}\\Uploaded\\ Should not already exist."
+#     os.mkdir(f"{parent}\\Uploaded")
+#     for file in files:
+#         wb = openpyxl.load_workbook(file, data_only=True)
+#         ws = wb[sheetName]
+#         lastDataRow = ws.max_row
 
-        status = initSheet(file, REQUIRED_COLS["central"], firstRow, lastDataRow, "central", sheetName)
+#         status = initSheet(file, REQUIRED_COLS["central"], firstRow, lastDataRow, "central", sheetName)
         
-    return
+#     return
 
-batchInit('C:\\Users\\topplab\\Desktop\\TEST\\IN', 2, "TestSheet1")
+# batchInit('C:\\Users\\topplab\\Desktop\\TEST\\IN', 2, "TestSheet1")
 # getFilesOfExt('C:\\Users\\topplab\\Desktop', ".txt")
 
 
