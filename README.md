@@ -94,7 +94,9 @@ http://10.16.0.101/adminer
 ```
 
 You should see a screen that looks like this:
+
 ![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/221a4650-4531-4f09-93f3-e48da17b7c7d)
+
 Keep localhost the same as it is referring to the localhost of the ip address, not your machine.
 
 Fill in your login details and click login.
