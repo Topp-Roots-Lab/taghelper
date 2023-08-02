@@ -33,10 +33,8 @@ class ImproperTypingException(Exception):
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", type=str, help="Path to the sheet.")
-    parser.add_argument("first-row", type=int, help="The first row number containing data.")
-    parser.add_argument("last-row", type=int, help="The last row number containing data.")
-    parser.add_argument("sheet-name", type=str, help="The name of the worksheet to upload.")
+    parser.add_argument("path", type=str, help="Input folder path")
+    parser.add_argument("first_row", type=int, help="The first row number containing data. MUST BE THE SAME FOR ALL FILES IN INPUT")
 
     parser.add_argument("-d", "--dev", action="store_true", help="Print all debug text.")
     parser.add_argument("-s", "--silent", action="store_true", help="Don't print anything except output and error to console.")
@@ -45,33 +43,20 @@ def options():
 
     return args
 
-logging.basicConfig(level=logging.DEBUG)
+
+
+
+
+    
+
+
+    
 
 
 
 
 
 
-REQUIRED_COLS = {
-    "central": {"Location": int,
-                "Date": str,
-                "Project": int}
-
-}
-
-
-try:
-    connection = mariadb.connect(
-        user=os.getlogin(),
-        password=getpass.getpass(prompt='Database user password: '),
-        host="10.16.0.101", #Nebula's relational ip!
-        port=3306,
-        database="testing"
-    )
-    dbcursor = connection.cursor()
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    sys.exit(1)
 
 
 
@@ -155,40 +140,6 @@ def insertMultipleValues(table: str, cols: list, vals: list):
 
 
 
-
-
-# Create an instance of tkinter frame
-tkwindow = Tk()
-# Set the geometry of tkinter frame
-tkwindow.geometry("700x350")
-
-
-
-# Used to define required columns for each specific database table. Also defines field data type that will be used for validation.
-
-
-
-file_path = None
-
-def open_file() -> None:
-    '''
-    Opens a choose file widget
-    '''
-    global file_path
-    file = filedialog.askopenfile(mode='r', filetypes=[('Excel', '*.xlsx')])
-    if file:
-      filepath = os.path.relpath(file.name)
-      print(filepath)
-
-      file_path = filepath
-    
-      assert filepath != None, "Should have a file path"
-      assert os.path.isfile(filepath)
-      
-      Label(tkwindow, text=str(filepath), font=('Aerial 11'))
- 
-
-
         
 def initialize(data: dict, colKey: dict, databaseTable: str):
     """
@@ -255,7 +206,7 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
     write_wb(path, firstid, lastid, uidCol, sheetName, startrow=firstDataRow)
     return 0                   
 
-PATH = 'C:\\Users\\topplab\\Desktop\\TEST\\IN\\Book1.xlsx'
+#PATH = 'C:\\Users\\topplab\\Desktop\\TEST\\IN\\Book1.xlsx'
 #_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "Initialize")
 
 
@@ -306,8 +257,48 @@ def batchInit(folderPath: str, firstDataRow: int):
 
 
 
-batchInit("C:\\Users\\topplab\\Desktop\\TEST\\IN", 2)
+if __name__ == "__main__":
+    args = options()
+
+    print(args.dev)
+    print(args.silent)
+    if args.dev:
+        logging.basicConfig(level=logging.DEBUG)
+    elif args.silent:
+        logging.basicConfig(level=logging.WARNING)
+    else:
+        print("we made it")
+        logging.basicConfig(level=logging.INFO)
+
+    logging.debug("debug")
+    logging.info("info")
+
+    REQUIRED_COLS = {
+    "central": {"Location": int,
+                "Date": str,
+                "Project": int}
+
+    }
 
 
-dbcursor.close()
-connection.close()
+    try:
+        connection = mariadb.connect(
+            user=os.getlogin(),
+            password=getpass.getpass(prompt='Database user password: '),
+            host="10.16.0.101", #Nebula's relational ip!
+            port=3306,
+            database="testing"
+        )
+        dbcursor = connection.cursor()
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
+
+
+    
+    batchInit(args.path, args.first_row)
+
+
+    dbcursor.close()
+    connection.close()
+
