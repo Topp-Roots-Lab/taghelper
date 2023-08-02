@@ -104,6 +104,14 @@ Fill in your login details and click login. Database is an optional field and sh
 ### Adding new tables (for new sample types) to mariadb.
 The database currenty has a central table for basic information, as well as tables for biomass, core wholes, core segments, and crowns. You will likely need to add more tables to accomadate new projects in the future. This database was designed to be flexible and easily expandable.
 
+Log into Adminer (following the steps above). Select the database you want to add tables to (currently named "Samples").
+
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/91ad4c46-e91e-4320-9364-13c7874aa7cb)
+
+Choose the "Create Table" option from the menu.
+
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/220ce64c-45bf-4f3d-a71c-7edac55a15de)
+
 
 
 # Taghelper 1.0
