@@ -1,5 +1,5 @@
 # Taghelper 2.0
-**These instructions will become effective soon but until then please refer to Taghelper 1.0 below this section**
+**These instructions will become effective soon but please refer to Taghelper 1.0 below this section until the transfer.**
 
 ## Installation
 
