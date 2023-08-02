@@ -81,6 +81,24 @@ except mariadb.Error as e:
 ```
 Update the username field to the new host's username, the host field to the new host's ip address, and the database field to the new host's database for tags (if changed).
 
+### Logging into Adminer
+The database manager, Adminer, is currently set up on Nebula to help manage this database. This is how you can log into Adminer from any computer on the same network as Nebula.
+
+In the browser of your choice (this has only been tested in chrome though), navigate to 
+```
+[ipaddress of server]/adminer
+```
+Currently this is 
+```
+http://10.16.0.101/adminer
+```
+
+You should see a screen that looks like this:
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/221a4650-4531-4f09-93f3-e48da17b7c7d)
+Keep localhost the same as it is referring to the localhost of the ip address, not your machine.
+
+Fill in your login details and click login.
+
 ### Adding new tables (for new sample types) to mariadb.
 The database currenty has a central table for basic information, as well as tables for biomass, core wholes, core segments, and crowns. You will likely need to add more tables to accomadate new projects in the future. This database was designed to be flexible and easily expandable.
 
