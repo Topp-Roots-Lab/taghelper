@@ -99,7 +99,7 @@ You should see a screen that looks like this:
 
 Keep localhost the same as it is referring to the localhost of the ip address, not your machine.
 
-Fill in your login details and click login.
+Fill in your login details and click login. Database is an optional field and should probably usually be left blank to access the entire server.
 
 ### Adding new tables (for new sample types) to mariadb.
 The database currenty has a central table for basic information, as well as tables for biomass, core wholes, core segments, and crowns. You will likely need to add more tables to accomadate new projects in the future. This database was designed to be flexible and easily expandable.
