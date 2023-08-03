@@ -1,4 +1,124 @@
-# taghelper
+# Taghelper 2.0
+**These instructions will become effective soon but please refer to Taghelper 1.0 below this section until the transfer.**
+
+## Installation
+
+**Dependencies**
+
+- python (3.7.4+)
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configuration
+### Adding new computers to mariadb
+Any computer that will run these scripts needs to be recognized by the db. You must create a database user for each computer before attempting to run the scripts.
+
+Check your computer's current ip address. You can do this by running 
+
+```bash
+ipconfig
+```
+on windows or
+```bash
+ifconfig
+```
+on linux. Use ssh to connect to the computer or server hosting the database.
+
+```bash
+ssh [hostname]@[hostip]
+```
+
+Open the mariadb configuration console.
+
+```bash
+sudo mariadb
+```
+
+Run the following SQL queries to add a new user.
+
+```sql
+CREATE USER '[the computer being added's username]'@'[the computer being added's ip]' IDENTIFIED BY '[password]';
+GRANT ALL PRIVILEGES ON [database_name].* TO '[the computer being added's username]'@'[the computer being added's ip]';
+FLUSH PRIVILEGES;
+```
+You can verify the new user's existance with:
+```sql
+SELECT User, Host FROM mysql.user;
+```
+Exit the database by typing:
+```sql
+EXIT;
+```
+followed by:
+```bash
+exit
+```
+
+Verify that the scripts are now functional on this computer by running the query-db.py script.
+```bash
+python query-db.py
+```
+### Accessing a database on a different server than default (Nebula).
+The tagserver is currently hosted on Nebula. If you have moved the database to another host and want to change the scripts to access this host instead, you need to update the ip and hostname in the config.
+
+Open id-upload.py (or whichever script you are trying to reconfigure) in a text editor.
+
+Locate the try/except block towards the top of the page. If the script you are in doesn't have one that looks like this, it doesn't need to be reconfigured.
+```python
+try:
+    conn = mariadb.connect(
+        user="topplab",
+        password=getpass.getpass(prompt='Database user password: '),
+        host="10.16.0.101", #Nebula's relational ip!
+        port=3306,
+        database="tag_server"
+    )
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
+    sys.exit(1)
+```
+Update the username field to the new host's username, the host field to the new host's ip address, and the database field to the new host's database for tags (if changed).
+
+### Logging into Adminer
+The database manager, Adminer, is currently set up on Nebula to help manage this database. This is how you can log into Adminer from any computer on the same network as Nebula.
+
+In the browser of your choice (this has only been tested in chrome though), navigate to 
+```
+[ipaddress of server]/adminer
+```
+Currently this is 
+```
+http://10.16.0.101/adminer
+```
+
+You should see a screen that looks like this:
+
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/221a4650-4531-4f09-93f3-e48da17b7c7d)
+
+Keep localhost the same as it is referring to the localhost of the ip address, not your machine.
+
+Fill in your login details and click login. Database is an optional field and should probably usually be left blank to access the entire server.
+
+### Adding new tables (for new sample types) to mariadb.
+The database currenty has a central table for basic information, as well as tables for biomass, core wholes, core segments, and crowns. You will likely need to add more tables to accomadate new projects in the future. This database was designed to be flexible and easily expandable.
+
+Log into Adminer (following the steps above). Select the database you want to add tables to (currently named "Samples").
+
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/91ad4c46-e91e-4320-9364-13c7874aa7cb)
+
+Choose the "Create Table" option from the menu.
+
+![image](https://github.com/Topp-Roots-Lab/taghelper/assets/100446167/220ce64c-45bf-4f3d-a71c-7edac55a15de)
+
+
+
+# Taghelper 1.0
+***WARNING***
+**These instructions will be depreciated after the transfer to Taghelper 2.0**
+
+
 This is a collection of scripts that provide various functions to interact with a Mariadb database that contains sample barcode strings. The database is currently hosted on nebula, although this can be modified in the future. 
 
 These tools are customized to the needs of the Topp Lab in 2023 but should be easily modifed to fit future changes.
