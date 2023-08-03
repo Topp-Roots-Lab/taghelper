@@ -240,18 +240,12 @@ def batchInit(folderPath: str, firstDataRow: int):
 if __name__ == "__main__":
     args = options()
 
-    print(args.dev)
-    print(args.silent)
     if args.dev:
         logging.basicConfig(level=logging.DEBUG)
     elif args.silent:
         logging.basicConfig(level=logging.WARNING)
     else:
-        print("we made it")
         logging.basicConfig(level=logging.INFO)
-
-    logging.debug("debug")
-    logging.info("info")
 
     REQUIRED_COLS = {
     "central": {"Location": int,
