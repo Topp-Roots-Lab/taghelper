@@ -4,9 +4,6 @@ import sys
 import openpyxl
 from openpyxl import Workbook
 
-from tkinter import *
-from tkinter import ttk, filedialog
-from tkinter.filedialog import askopenfile
 import os
 import shutil
 
@@ -42,23 +39,6 @@ def options():
     args = parser.parse_args()
 
     return args
-
-
-
-
-
-    
-
-
-    
-
-
-
-
-
-
-
-
 
 
 
@@ -275,9 +255,31 @@ if __name__ == "__main__":
 
     REQUIRED_COLS = {
     "central": {"Location": int,
+                "Date": str, 
+                "Project": int},
+    "biomass": {
+                "UID": int,
+                "Mass": float,
+                "Genotype": str,
+                "Range": int,
+                "Col": int,
+                "Plot": int, #TODO Find some way to allow this to be null or not exist
+                "Field": str,
+                "SampleNum": int,
+                "SampleType": str,
                 "Date": str,
-                "Project": int}
-
+                "Barcode": str},
+    "crown":   {
+                "UID": int,
+                "Genotype": str,
+                "Range": int,
+                "Col": int,
+                "Plot": int, #TODO Find some way to allow this to be null or not exist
+                "Field": str,
+                "SampleNum": int,
+                "SampleType": str,
+                "Date": str,
+                "Barcode": str},
     }
 
 

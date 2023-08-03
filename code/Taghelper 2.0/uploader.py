@@ -17,14 +17,33 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-
 REQUIRED_COLS = {
     "central": {"Location": int,
-                "Date": str,
+                "Year": str, 
                 "Project": int},
-    "biomass": {"UID": int,
-                "Biomass": int}
-    
+    "biomass": {
+                "UID": int,
+                "Mass": float,
+                "Genotype": str,
+                "Range": int,
+                "Col": int,
+                "Plot": int, #TODO Find some way to allow this to be null or not exist
+                "Field": str,
+                "SampleNum": int,
+                "SampleType": str,
+                "Date": str,
+                "Barcode": str},
+    "crown":   {
+                "UID": int,
+                "Genotype": str,
+                "Range": int,
+                "Col": int,
+                "Plot": int, #TODO Find some way to allow this to be null or not exist
+                "Field": str,
+                "SampleNum": int,
+                "SampleType": str,
+                "Date": str,
+                "Barcode": str},
 }
 
 try:
@@ -183,7 +202,7 @@ def uploadSheet(path: str, sheetname: str, colKey: dict, firstDataRow: int, last
     headers = getColHeaders(path, sheetname)
     colMap, failed = mapNeededCols(colKey, headers)
     if failed:
-        logging.error("EXITING FOR MISSING REQURIED COLUMNS")
+        logging.error("EXITING FOR MISSING REQUIRED COLUMNS")
         return 1
     data, failed = accumDataByUid(colMap, firstDataRow, lastDataRow, path, sheetname, uidAsData=True)
     if failed:

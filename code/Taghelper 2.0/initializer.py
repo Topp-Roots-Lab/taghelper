@@ -44,7 +44,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 REQUIRED_COLS = {
     "central": {"Location": int,
-                "Date": str,
+                "Year": str, 
                 "Project": int},
     "biomass": {
                 "UID": int,
