@@ -190,18 +190,19 @@ def initSheet(path: str, colKey: dict, firstDataRow: int, lastDataRow: int, data
 #_ = initSheet(PATH, REQUIRED_COLS["central"], 2, 44, "central", "Initialize")
 
 
-def batchInit(folderPath: str, firstDataRow: int):
+def batchUpload(folderPath: str, firstDataRow: int, tableName: str): # Currently, tablename must be same as sheetname, could add a different parameter but this makes it simpler? THIS FUNCTION HAS NOT BEEN TESTED THROROUGHLY ENOUGH
     """
     A function that runs the initialization function on multiple files in a single provided input directory. The function then creates directories for files that were uploaded successfully and those which were not uploaded due to an error. 
 
     Parameters:
         str folderPath: The file path to the input directory.
         int firstDataRow: The first row containing data. MUST BE THE SAME FOR ALL FILES INPUTTED.
+        str tableName: The name of the table these sheets correspond to. TODO: Maybe add a item in sheet itself that can be read so sheets with multiple sample types can be uploaded at once.
     Return:
         void
     """
     assert not folderPath.endswith("\\"), "Input dir cannot end with a slash"
-    ckey = REQUIRED_COLS["central"]
+    ckey = REQUIRED_COLS[tableName]
     files = [x for x in os.listdir(folderPath) if x.endswith(".xlsx")] #all files in the input directory that are .xlsx
     parentDir = os.path.dirname(folderPath)
 
@@ -222,13 +223,13 @@ def batchInit(folderPath: str, firstDataRow: int):
         print(abspath)
 
         workbook = openpyxl.load_workbook(abspath, data_only=True)
-        worksheet = workbook["Initialize"]
+        worksheet = workbook[tableName]
         lRow = worksheet.max_row
         workbook.close()
 
         print(f"LAST ROW: {lRow}")
 
-        failed = initSheet(abspath, ckey, firstDataRow, lRow, "central", "Initialize")
+        failed = initSheet(abspath, ckey, firstDataRow, lRow, tableName, tableName)
 
         if failed:
             shutil.move(abspath, os.path.join(failedDirPath, file))
@@ -292,7 +293,7 @@ if __name__ == "__main__":
 
 
     
-    batchInit(args.path, args.first_row)
+    batchUpload(args.path, args.first_row)
 
 
     dbcursor.close()
